@@ -1,8 +1,12 @@
-// Check if the user's platform is PC, Mac, or Linux
-const isDesktop = /win|mac|linux/i.test(navigator.platform.toLowerCase());
+const magnetics = document.querySelectorAll('.magnetic'); // Get all .magnetic elements
 
-if (isDesktop) {
-    const magnetics = document.querySelectorAll('.magnetic'); // Get all .magnetic elements
+// Function to check if the screen size is within the specified range
+function isMobileOrTablet() {
+    return window.matchMedia('(min-width: 768px) and (max-width: 1024px)').matches || window.matchMedia('(max-width: 768px)').matches;
+}
+
+// Only run the code if the screen size is outside the specified range
+if (!isMobileOrTablet()) {
     magnetics.forEach(magnetic => {
         let boundingRect = magnetic.getBoundingClientRect();
         
