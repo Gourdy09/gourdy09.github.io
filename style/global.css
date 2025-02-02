@@ -196,7 +196,7 @@ button{
 }
 
 .crosshair{
-  z-index: 200;
+  z-index: 1000;
   --circle-size: 1em;
   position: fixed;
   width: var(--circle-size);
@@ -215,4 +215,29 @@ button{
 
 ::-webkit-scrollbar-thumb{
   color: var(--background);
+}
+
+.banner{
+  min-height: 100vh;
+  background-color: var(--navbarbackground);
+  z-index: 500;
+  position: fixed;
+  top: 0;
+  width: 25vw;
+}
+
+#banner-1{
+  left: 0;
+}
+
+#banner-2{
+  left: 25vw;
+}
+
+#banner-3{
+  left: 50vw;
+}
+
+#banner-4{
+  left: 75vw;
 }

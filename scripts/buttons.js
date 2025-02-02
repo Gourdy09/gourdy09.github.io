@@ -1,3 +1,17 @@
+import { animatePageIn, animatePageOut, animatePageInInit } from './animations.js';
+
+const isFirstLoad = sessionStorage.getItem('isFirstLoad');
+
+// Run animatePageInInit on first load
+window.onload = () => {
+  if (!isFirstLoad) {
+    animatePageInInit();
+    sessionStorage.setItem('isFirstLoad', 'true');
+  } else {
+    animatePageIn();
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const homeBtn = document.getElementById('homeBtn');
   const projectsBtn = document.getElementById('projectsBtn');
@@ -5,38 +19,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const experienceBtn = document.getElementById('experienceBtn');
   const toolsBtn = document.getElementById('toolsBtn');
 
-  // Define your functions
   const openHome = () => {
     console.log('Open Home');
-    // Add your navigation logic here
+    animatePageOut(() => {
+      window.location.href = '/';
+    });
   };
 
   const openProjects = () => {
-    console.log('Open Projects')
-    
+    console.log('Open Projects');
+    animatePageOut(() => {
+      window.location.href = '/projects';
+    });
   };
 
   const openContact = () => {
     console.log('Open Contact');
-    // Add your navigation logic here
+    animatePageOut(() => {
+      window.location.href = '/contact';
+    });
   };
 
   const openExperience = () => {
     console.log('Open Experience');
-    // Add your navigation logic here
+    animatePageOut(() => {
+      window.location.href = '/experience';
+    });
   };
 
   const openTools = () => {
     console.log('Open Tools');
-    // Add your navigation logic here
+    animatePageOut(() => {
+      window.location.href = '/tools';
+    });
   };
 
-  // Attach event listeners to buttons
   homeBtn.addEventListener('click', openHome);
   projectsBtn.addEventListener('click', openProjects);
   contactBtn.addEventListener('click', openContact);
   experienceBtn.addEventListener('click', openExperience);
   toolsBtn.addEventListener('click', openTools);
-  }
-);
-  
+});

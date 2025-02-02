@@ -10,12 +10,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
-    <link rel="stylesheet" href="./global.css"/>
-    <link rel="stylesheet" href="./index.css"/>
+    <link rel="stylesheet" href="./style/global.css"/>
+    <link rel="stylesheet" href="./style/index.css"/>
 </head>
 
 <body>
     <div class="crosshair"></div>
+
+    <div id="banner-1" class="banner"></div>
+    <div id="banner-2" class="banner"></div>
+    <div id="banner-3" class="banner"></div>
+    <div id="banner-4" class="banner"></div>
+
     <nav class="navbar">
         <div class="button-container">
             <button class="button" id="homeBtn"><span class="iconoir-home-simple button-img"/></button>
@@ -126,9 +132,10 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="magnetic.js"></script>
-    <script src="buttons.js"></script>
-    <script src="crosshair.js"></script>
+    <script src="./scripts/animations.js" type="module"></script>
+    <script src="./scripts/magnetic.js"></script>
+    <script src="./scripts/buttons.js" type="module"></script>
+    <script src="./scripts/crosshair.js"></script>
 </body>
 
 </html>
