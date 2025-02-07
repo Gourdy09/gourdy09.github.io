@@ -13,11 +13,11 @@ window.onload = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  const homeBtn = document.getElementById('homeBtn');
-  const projectsBtn = document.getElementById('projectsBtn');
-  const contactBtn = document.getElementById('contactBtn');
-  const experienceBtn = document.getElementById('experienceBtn');
-  const toolsBtn = document.getElementById('toolsBtn');
+  const homeBtn = document.querySelectorAll('[id=homeBtn]');
+  const projectsBtn = document.querySelectorAll('[id=projectsBtn]');
+  const contactBtn = document.querySelectorAll('[id=contactBtn]');
+  const experienceBtn = document.querySelectorAll('[id=experienceBtn]');
+  const toolsBtn = document.querySelectorAll('[id=toolsBtn]');
 
   const openHome = () => {
     console.log('Open Home');
@@ -54,9 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  homeBtn.addEventListener('click', openHome);
-  projectsBtn.addEventListener('click', openProjects);
-  contactBtn.addEventListener('click', openContact);
-  experienceBtn.addEventListener('click', openExperience);
-  toolsBtn.addEventListener('click', openTools);
+  homeBtn.forEach(e => {
+    e.addEventListener('click', openHome);
+  });
+  projectsBtn.forEach(e => {
+    e.addEventListener('click', openProjects);
+  });
+  contactBtn.forEach(e => {
+    e.addEventListener('click', openContact);
+  });
+  experienceBtn.forEach(e => {
+    e.addEventListener('click', openExperience);
+  });
+  toolsBtn.forEach(e => {
+    e.addEventListener('click', openTools);
+  });
 });

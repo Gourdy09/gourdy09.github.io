@@ -8,6 +8,11 @@
   padding: 0em;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
+
 @media (max-width: 768px) {
   * {
     cursor: default !important;
@@ -50,6 +55,7 @@ body {
   color: var(--text);
   background: var(--background);
   font-family: "Space Mono", serif;
+  overflow-x: hidden;
 }
 
 .text {
@@ -217,27 +223,29 @@ button{
   color: var(--background);
 }
 
-.banner{
+.banner {
   min-height: 100vh;
   background-color: var(--navbarbackground);
   z-index: 500;
   position: fixed;
   top: 0;
-  width: 25vw;
-}
-
-#banner-1{
+  width: 25%;
   left: 0;
 }
 
-#banner-2{
-  left: 25vw;
+
+#banner-1 {
+  left: 0;
 }
 
-#banner-3{
-  left: 50vw;
+#banner-2 {
+  left: 25%;
 }
 
-#banner-4{
-  left: 75vw;
+#banner-3 {
+  left: 50%;
+}
+
+#banner-4 {
+  left: 75%;
 }
