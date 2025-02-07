@@ -8,10 +8,6 @@
   padding: 0em;
 }
 
-html, body {
-  overflow-x: hidden;
-}
-
 
 @media (max-width: 768px) {
   * {
