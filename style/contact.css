@@ -10,6 +10,12 @@
     flex-wrap: wrap;
     flex-direction: column;
 }
+body {
+    color: var(--text);
+    background: var(--background);
+    font-family: "Space Mono", serif;
+    overflow-x: hidden;
+}
 
 input, textarea {
     font-family: "Space Mono", serif;
@@ -26,7 +32,7 @@ input, textarea {
     justify-content: center;
     align-items: center;
     padding: 2em;
-    width: 100%;
+    width: 90%;
     max-width: 800px;
     background-color: var(--background);
     border-radius: 9px;
@@ -94,6 +100,7 @@ input, textarea {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
+    font-family: "Space Mono", serif;
 }
 
 .contact-form button:hover {
