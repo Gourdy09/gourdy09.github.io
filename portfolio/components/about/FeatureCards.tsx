@@ -26,8 +26,8 @@ const FeatureCards = () => {
     },
     {
       title: "Contact",
-      description: "Let's connect and discuss your next big idea.",
-      link: "#contact",
+      description: "Let’s connect and build something that makes an impact.",
+      link: "mailto:patel.omtx@gmail.com",
       linkText: "Get in touch"
     }
   ];

@@ -1,43 +1,50 @@
 'use client';
 
-// hooks/useMagneticEffect.ts
 import { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
+import { useMotionValue, useSpring, useTransform, motion } from 'framer-motion';
+import type { MotionValue } from 'framer-motion';
 
 interface MagneticOptions {
   magneticArea?: number;
   magnetStrength?: number;
-  returnDuration?: number;
-  returnEase?: string;
+  springConfig?: {
+    stiffness: number;
+    damping: number;
+  };
 }
 
 /**
- * A custom hook that creates a magnetic effect on an element
+ * A custom hook that creates a magnetic effect on an element using Framer Motion
  * @param options - Configuration options for the magnetic effect
- * @returns - The ref to attach to the target element
+ * @returns - An object containing the ref to attach to the target element and motion values
  */
 export const useMagneticEffect = (options?: MagneticOptions | null) => {
   // If options is null, the effect will be disabled
   const {
     magneticArea = 100,
     magnetStrength = 0.4,
-    returnDuration = 1,
-    returnEase = "elastic.out(1, 0.3)"
+    springConfig = {
+      stiffness: 300,
+      damping: 20
+    }
   } = options || {};
 
-  // Use generic HTMLElement type for the ref
   const elementRef = useRef<HTMLElement | null>(null);
-
+  
+  // Setup motion values
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  // Add spring physics
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+  
   useEffect(() => {
     // Skip effect if options is null
     if (!options) return;
     
     const element = elementRef.current;
     if (!element) return;
-
-    // Store the initial position
-    const initialX = 0;
-    const initialY = 0;
 
     // Handle mouse movement
     const handleMouseMove = (e: MouseEvent) => {
@@ -58,35 +65,19 @@ export const useMagneticEffect = (options?: MagneticOptions | null) => {
       // Only apply effect if mouse is within magnetic area
       if (distance < magneticArea) {
         // Calculate displacement based on distance and strength
-        const moveX = distanceX * magnetStrength;
-        const moveY = distanceY * magnetStrength;
-        
-        // Animate to new position with smooth transition
-        gsap.to(element, {
-          x: moveX,
-          y: moveY,
-          duration: 1,
-          ease: "elastic.out(1, 0.3)"
-        });
+        mouseX.set(distanceX * magnetStrength);
+        mouseY.set(distanceY * magnetStrength);
       } else {
         // Return to original position when mouse is outside magnetic area
-        gsap.to(element, {
-          x: initialX,
-          y: initialY,
-          duration: returnDuration,
-          ease: returnEase
-        });
+        mouseX.set(0);
+        mouseY.set(0);
       }
     };
     
     // Return to original position when mouse leaves
     const handleMouseLeave = () => {
-      gsap.to(element, {
-        x: initialX,
-        y: initialY,
-        duration: returnDuration,
-        ease: returnEase
-      });
+      mouseX.set(0);
+      mouseY.set(0);
     };
     
     // Add event listeners to document for mouse movement
@@ -98,9 +89,9 @@ export const useMagneticEffect = (options?: MagneticOptions | null) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [options, magneticArea, magnetStrength, returnDuration, returnEase]);
+  }, [options, magneticArea, magnetStrength, mouseX, mouseY]);
 
-  return elementRef;
+  return { ref: elementRef, x: springX, y: springY };
 };
 
 export default useMagneticEffect;

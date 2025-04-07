@@ -1,6 +1,6 @@
-import Hero from "@/components/Hero";
+import Hero from "@/components/main/Hero";
 import NavBar from "@/components/NavBar";
-import About from "@/components/About";
+import About from "@/components/about/About";
 
 export default function Home() {
   return (
@@ -16,7 +16,11 @@ export default function Home() {
           <About/>
         </div>
 
-        <div id="work">
+        <div id="experience">
+
+        </div>
+
+        <div id="projects">
 
         </div>
 

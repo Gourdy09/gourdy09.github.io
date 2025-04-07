@@ -3,7 +3,7 @@ import AnimatedHeader from './AnimatedHeader';
 import ProfileDivider from './ProfileDivider';
 import AboutContent from './AboutContent';
 import FeatureCards from './FeatureCards';
-import SocialLinks from './SocialLinks';
+import AnimatedSocialLinks from './AnimatedSocialLinks';
 
 function About() {
   return (
@@ -13,7 +13,7 @@ function About() {
         <ProfileDivider />
         <AboutContent />
         <FeatureCards />
-        <SocialLinks />
+        <AnimatedSocialLinks />
       </div>
     </div>
   );
