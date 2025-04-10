@@ -1,7 +1,8 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import { gsap } from 'gsap';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 const AnimatedSocialLinks = () => {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
@@ -13,55 +14,75 @@ const AnimatedSocialLinks = () => {
     { name: "linkedin", link: "https://www.linkedin.com/in/om-patel09/", icon: "/linkedin.svg" }
   ];
   
-  useEffect(() => {
-    // Animate social icons
-    gsap.from(".social-icon", {
-      scale: 0,
-      stagger: 0.1,
-      duration: 0.5,
-      ease: "back.out(1.7)",
-      delay: 1.5 // Delay to sync with main timeline
-    });
-  }, []);
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const item = {
+    hidden: { scale: 0 },
+    visible: {
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 20
+      }
+    }
+  };
 
   return (
-    <div className="w-full flex justify-center mb-8">
-      <div className="flex justify-center space-x-6 py-4 px-8 border rounded-full border-accent bg-accent/10 hover:bg-accent/20 transition-all duration-300">
-        {socialLinks.map((social, index) => {
-          const isIconHovered = hoveredIcon === social.name;
-          const isAnyIconHovered = hoveredIcon !== null;
-          const shouldShrink = isAnyIconHovered && !isIconHovered;
-          
-          return (
-            <a 
-              key={index}
+    <motion.div 
+      className="flex mb-2 gap-6 items-center"
+      variants={container}
+      initial="hidden"
+      animate="visible"
+    >
+      {socialLinks.map((social, index) => {
+        const isIconHovered = hoveredIcon === social.name;
+        const isAnyIconHovered = hoveredIcon !== null;
+        const shouldShrink = isAnyIconHovered && !isIconHovered;
+        
+        return (
+          <motion.div
+            key={social.name}
+            variants={item}
+          >
+            <Link
               href={social.link}
-              target="_blank"
               rel="noopener noreferrer"
-              className="social-icon rounded-full bg-secondary/50 p-3 hover:bg-primary/50 transition-all duration-300"
+              target="_blank"
+              className="rounded-full bg-[#5e3d47]/80 backdrop-blur-sm transition-all duration-300 shadow-md flex items-center justify-center"
               style={{
-                transform: isIconHovered 
-                  ? 'translateY(-10px) scale(1.1)' 
-                  : shouldShrink 
-                    ? 'scale(0.9)' 
-                    : 'scale(1)'
+                width: isIconHovered ? '48px' : shouldShrink ? '32px' : '36px',
+                height: isIconHovered ? '48px' : shouldShrink ? '32px' : '36px',
+                transform: isIconHovered ? 'translateY(-10px)' : 'translateY(0)',
+                zIndex: isIconHovered ? 60 : 55,
+                padding: '6px',
+                margin: '-6px',
               }}
               onMouseEnter={() => setHoveredIcon(social.name)}
               onMouseLeave={() => setHoveredIcon(null)}
             >
-              <div className="[&_img]:filter [&_img]:brightness-0 [&_img]:invert">
+              <div className="[&_img]:filter [&_img]:brightness-0 [&_img]:invert flex items-center justify-center">
                 <Image
                   src={social.icon}
-                  width={24}
-                  height={24}
+                  width={isIconHovered ? 28 : shouldShrink ? 18 : 22}
+                  height={isIconHovered ? 28 : shouldShrink ? 18 : 22}
                   alt={social.name}
                 />
               </div>
-            </a>
-          );
-        })}
-      </div>
-    </div>
+            </Link>
+          </motion.div>
+        );
+      })}
+    </motion.div>
   );
 };
 

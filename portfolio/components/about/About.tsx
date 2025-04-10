@@ -13,7 +13,9 @@ function About() {
         <ProfileDivider />
         <AboutContent />
         <FeatureCards />
-        <AnimatedSocialLinks />
+        <div className="flex justify-self-center">
+          <AnimatedSocialLinks />
+        </div>
       </div>
     </div>
   );

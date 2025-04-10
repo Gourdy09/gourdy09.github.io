@@ -9,17 +9,33 @@ interface ChipProps {
   text: string;
   image?: string;
   magnetic?: boolean;
-  area?: number;
+  magneticAreaWidth?: number;
+  magneticAreaHeight?: number;
+  magnetStrengthX?: number;
+  magnetStrengthY?: number;
   width?: number;
   height?: number;
   pulse?: boolean;
 }
 
-function Chip({ text, image, area = 70, width = 16, height = 16, magnetic = false, pulse = false }: ChipProps) {
+function Chip({ 
+  text, 
+  image, 
+  magneticAreaWidth = 70, 
+  magneticAreaHeight = 70, 
+  magnetStrengthX = 0.4,
+  magnetStrengthY = 0.4,
+  width = 16, 
+  height = 16, 
+  magnetic = false, 
+  pulse = false 
+}: ChipProps) {
   // Only apply magnetic effect if magnetic prop is true
   const magneticProps = useMagneticEffect(magnetic ? {
-    magneticArea: area,
-    magnetStrength: 0.4,
+    magneticAreaWidth: 60,
+    magneticAreaHeight: 60,
+    magnetStrengthX,
+    magnetStrengthY,
     springConfig: {
       stiffness: 300,
       damping: 20
@@ -30,7 +46,7 @@ function Chip({ text, image, area = 70, width = 16, height = 16, magnetic = fals
     scale: [1, 1.2, 1],
     opacity: [1, 0.8, 1],
     transition: {
-      duration: 2,
+      duration: 0.5,
       repeat: Infinity,
       ease: "easeInOut"
     }

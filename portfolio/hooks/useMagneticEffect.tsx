@@ -5,8 +5,10 @@ import { useMotionValue, useSpring, useTransform, motion } from 'framer-motion';
 import type { MotionValue } from 'framer-motion';
 
 interface MagneticOptions {
-  magneticArea?: number;
-  magnetStrength?: number;
+  magneticAreaWidth?: number;
+  magneticAreaHeight?: number;
+  magnetStrengthX?: number;
+  magnetStrengthY?: number;
   springConfig?: {
     stiffness: number;
     damping: number;
@@ -21,8 +23,10 @@ interface MagneticOptions {
 export const useMagneticEffect = (options?: MagneticOptions | null) => {
   // If options is null, the effect will be disabled
   const {
-    magneticArea = 100,
-    magnetStrength = 0.4,
+    magneticAreaWidth = 100,
+    magneticAreaHeight = 100,
+    magnetStrengthX = 0.4,
+    magnetStrengthY = 0.4,
     springConfig = {
       stiffness: 300,
       damping: 20
@@ -59,14 +63,22 @@ export const useMagneticEffect = (options?: MagneticOptions | null) => {
       const distanceX = clientX - elementCenterX;
       const distanceY = clientY - elementCenterY;
       
-      // Calculate total distance using Pythagorean theorem
-      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+      // Calculate normalized distances relative to the magnetic area dimensions
+      const normalizedX = distanceX / magneticAreaWidth;
+      const normalizedY = distanceY / magneticAreaHeight;
+      
+      // Check if mouse is within magnetic area (now an ellipse rather than circle)
+      // Using the formula for an ellipse: (x/a)² + (y/b)² < 1
+      const isWithinMagneticArea = 
+        Math.pow(distanceX / magneticAreaWidth, 2) + 
+        Math.pow(distanceY / magneticAreaHeight, 2) < 1;
       
       // Only apply effect if mouse is within magnetic area
-      if (distance < magneticArea) {
+      if (isWithinMagneticArea) {
         // Calculate displacement based on distance and strength
-        mouseX.set(distanceX * magnetStrength);
-        mouseY.set(distanceY * magnetStrength);
+        // The closer to the center, the stronger the effect
+        mouseX.set(distanceX * magnetStrengthX);
+        mouseY.set(distanceY * magnetStrengthY);
       } else {
         // Return to original position when mouse is outside magnetic area
         mouseX.set(0);
@@ -89,7 +101,7 @@ export const useMagneticEffect = (options?: MagneticOptions | null) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [options, magneticArea, magnetStrength, mouseX, mouseY]);
+  }, [options, magneticAreaWidth, magneticAreaHeight, magnetStrengthX, magnetStrengthY, mouseX, mouseY]);
 
   return { ref: elementRef, x: springX, y: springY };
 };
