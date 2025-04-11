@@ -41,11 +41,11 @@ const Projects = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Projects
+          <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
+            PROJECTS
           </h2>
           <p className="text-text text-lg">
-            // A selection of my technical projects across various domains
+            // A few things I did at some point in time
           </p>
         </motion.div>
 

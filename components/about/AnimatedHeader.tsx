@@ -75,7 +75,7 @@ const AnimatedHeader = () => {
           delay: 0.4,
         }}
       >
-        <h3 className="text-2xl md:text-3xl mx-4 md:mx-12 text-text flex items-center">
+        <h3 className="text-2xl md:text-3xl text-text flex items-center">
           // Currently Working On{" "}
           <span className="relative ml-2">
             <span ref={scope} className="inline-block">
