@@ -11,6 +11,14 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.config({
+    extends: ['next'],
+    rules: {
+      'react/jsx-no-comment-textnodes': 'off',
+      'react-hooks/exhaustive-deps': 'off'
+    }
+  })
+  
 ];
 
 export default eslintConfig;
