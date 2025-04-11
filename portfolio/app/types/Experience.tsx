@@ -9,5 +9,5 @@ export interface Experience {
     description: string;
     skills: string[];
     achievements?: string[];
-    logo?: string;
+    logo: string;
 }

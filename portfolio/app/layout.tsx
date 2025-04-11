@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Om Patel",
-  description: "Om Patel's Porfolio",
+  description: "AI & Robotics developer based in Texas specializing in intelligent systems, automation, and machine learning. Open to collaboration and innovative projects.",
 };
 
 export default function RootLayout({

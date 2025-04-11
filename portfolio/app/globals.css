@@ -9,8 +9,17 @@
     user-select: none;
 }
 
-body{
+html, body {
     overflow-x: hidden;
+    max-width: 100vw;
+}
+
+body {
+    overflow-x: hidden !important;
+}
+
+.max-w-4xl {
+    max-width: min(4xl, calc(100vw - 2rem));
 }
 
 *::-webkit-scrollbar {

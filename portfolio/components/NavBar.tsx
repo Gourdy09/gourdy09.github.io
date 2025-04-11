@@ -5,24 +5,50 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 const tabs = [
-  { id: "home", label: "Home", icon: "/home.svg" },
-  { id: "about", label: "About", icon: "/about.svg" },
-  { id: "work", label: "Work", icon: "/work.svg" },
-  { id: "stats", label: "Stats", icon: "/stats.svg" },
+  { id: "home", label: "Home", icon: "/icons/home.svg" },
+  { id: "about", label: "About", icon: "/icons/about.svg" },
+  { id: "work", label: "Work", icon: "/icons/work.svg" },
+  { id: "projects", label: "Projects", icon: "/icons/stats.svg" },
 ];
 
 export default function Navbar() {
   const [selectedTab, setSelectedTab] = useState("home");
 
   const handleTabClick = (tabId: string) => {
-    setSelectedTab(tabId);
-    // Smooth scroll to section
+    // Just scroll, don't update selected tab on click
     document.getElementById(tabId)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-50% 0px",
+      threshold: 0,
+    };
+
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setSelectedTab(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+
+    tabs.forEach((tab) => {
+      const element = document.getElementById(tab.id);
+      if (element) observer.observe(element);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <div className="fixed top-8 left-0 w-full flex justify-center z-50 pointer-events-none">
-      <motion.nav 
+      <motion.nav
         className="flex gap-4 h-20 p-4 justify-center backdrop-blur-xl rounded-xl shadow-lg bg-text/10 pointer-events-auto"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -33,8 +59,8 @@ export default function Navbar() {
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
             className={`relative flex items-center justify-center transition-all duration-300 rounded-lg overflow-hidden backdrop-blur-md cursor-pointer text-[#f9e2fb] ${
-              selectedTab === tab.id 
-                ? "bg-[#d2042d]/40 w-32 justify-start pl-4 shadow-lg" 
+              selectedTab === tab.id
+                ? "bg-[#d2042d]/40 w-32 justify-start pl-4 shadow-lg"
                 : "bg-[#5e3d47]/20 w-12 hover:bg-[#5e3d47]/40"
             }`}
             initial={{ opacity: 0, y: 10 }}
@@ -50,10 +76,10 @@ export default function Navbar() {
                 <Image src={tab.icon} width={24} height={24} alt={tab.label} />
               </div>
             </motion.div>
-            
+
             <AnimatePresence>
               {selectedTab === tab.id && (
-                <motion.span 
+                <motion.span
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}

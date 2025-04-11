@@ -1,34 +1,29 @@
 import Hero from "@/components/main/Hero";
 import NavBar from "@/components/NavBar";
 import About from "@/components/about/About";
-import Projects from "@/components/Projects";
-import ExperienceSection from "@/components/ExperienceSection";
+import Projects from "@/components/projects/Projects";
+import ExperienceSection from "@/components/experience/ExperienceSection";
 
 export default function Home() {
   return (
     <main className="bg-background">
+      <NavBar />
 
-        <NavBar/>
-        
-        <div id="home">
-          <Hero/>
-        </div>
+      <div id="home">
+        <Hero />
+      </div>
 
-        <div id="about">
-          <About/>
-        </div>
+      <div id="about">
+        <About />
+      </div>
 
-        <div id="experience">
-          <ExperienceSection/>
-        </div>
+      <div id="work">
+        <ExperienceSection />
+      </div>
 
-        <div id="projects">
-          <Projects/>
-        </div>
-
-        <div id="stats">
-
-        </div>
+      <div id="projects">
+        <Projects />
+      </div>
     </main>
   );
 }

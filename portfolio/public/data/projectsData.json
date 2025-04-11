@@ -1,0 +1,119 @@
+[
+  {
+    "id": 1,
+    "title": "Thrive",
+    "description": "An AI-powered diabetes management platform featuring a continuous glucose monitor (CGM) and a mobile app that provides real-time analytics, trends, and health insights. Initially developed for the Congressional App Challenge, the platform has since evolved into a startup, with a focus on empowering individuals to take control of their health through intelligent, personalized care. The company is led by me, overseeing both business operations and ongoing development.",
+    "shortDescription": "AI-powered diabetes management platform",
+    "technologies": ["Python", "TensorFlow", "React Native", "Firebase"],
+    "timeframe": "Jan 2024 - Present",
+    "githubLink": "https://github.com/Gourdy09/Thrive/",
+    "images": ["/projects/thrive/app-cover.png", "/projects/thrive/logo.png"],
+    "category": "Artificial Intelligence"
+  },
+
+  {
+    "id": 2,
+    "title": "VEX High Stakes Robot - HAQUSHAQ",
+    "description": "A competition-ready VEX robot designed for the 2024 High Stakes challenge, featuring both autonomous and user-controlled modes. The robot incorporated custom-built subsystems including a conveyor belt scoring mechanism, geared drivebase, and sensor-integrated navigation. Developed using VEXcode with C++ and Python-based simulations, the robot leveraged wireless communication and precision control for scoring consistency. Led the programming, design, and mechanical build while coordinating strategy and collaboration across the team. The robot placed 18th in the Gulf Coast regional competition, demonstrating strong performance in autonomous navigation and team coordination.",
+    "shortDescription": "Autonomous + driver-controlled VEX competition robot",
+    "technologies": [
+      "C++",
+      "VEXcode",
+      "Python",
+      "Wireless Communication",
+      "Electrical Engineering",
+      "Mechanical Engineering",
+      "Robotics",
+      "CAD"
+    ],
+    "timeframe": "Sep 2024 – Feb 2025",
+    "githubLink": "https://github.com/Gourdy09/HAQUSHAQ-vex-code",
+    "images": [
+      "/projects/vex-robotics/1.png",
+      "/projects/vex-robotics/2.jpg",
+      "/projects/vex-robotics/3.jpg",
+      "/projects/vex-robotics/4.jpg",
+      "/projects/vex-robotics/5.jpg",
+      "/projects/vex-robotics/6.jpg",
+      "/projects/vex-robotics/7.jpg",
+      "/projects/vex-robotics/8.jpg",
+      "/projects/vex-robotics/9.jpg",
+      "/projects/vex-robotics/10.jpg"
+    ],
+    "category": "Robotics"
+  },
+
+  {
+    "id": 3,
+    "title": "SL95 Interactive Exhibit",
+    "description": "An immersive game-based experience developed in collaboration with the City of Sugar Land to digitally recreate the SL95 museum exhibit. Designed to engage and educate users about Sugar Land’s past, the project combines interactive storytelling with historically accurate environments. Users navigate through key moments in local history via playable maps, animated sequences, and narrative events. As one of the project directors and Unity development lead, I collaborated with the exhibit director, city officials, and students across Fort Bend to bring the story of SL95 to life.",
+    "shortDescription": "An interactive Unity experience for the SL95 historical exhibit",
+    "technologies": ["Unity", "Blender", "Fusion 360", "C#", "Adobe Suite"],
+    "timeframe": "Jun 2024 – Present",
+    "liveLink": "https://sl95.framer.ai/",
+    "images": [
+      "/projects/sl95/logo.jpg",
+      "/projects/sl95/sugar-factory.jpg",
+      "/projects/sl95/exhibit.jpg",
+      "/projects/sl95/exhibit-2.jpg"
+    ],
+    "category": "Game Development"
+  },
+
+  {
+    "id": 4,
+    "title": "TSA Data Analytics – Housing Markets & the Economy",
+    "description": "A regional award-winning data science project for the Technology Student Association (TSA) analyzing the U.S. housing market’s predictive power over key economic indicators. Using Python, Excel, and R, we processed datasets from the FHFA, SEC, BLS, and more to examine relationships between the Housing Price Index (HPI), GDP, inflation (CPI), the S&P 500, and gold prices. The project featured lag analysis, cross-correlation, and regression modeling. I led the research, data collection, coding, and presentation efforts. We placed 5th out of 30+ schools in the Gulf Coast region and presented a full statistical report and scientific poster. Under review at Journal of Emerging Investigators (JEI)",
+    "shortDescription": "Award-winning economic analysis using Python, Excel, and R",
+    "technologies": [
+      "Python",
+      "Pandas",
+      "Matplotlib",
+      "Excel",
+      "R",
+      "Statistical Modeling"
+    ],
+    "timeframe": "Sep 2024 – Feb 2025",
+    "githubLink": "https://github.com/Gourdy09/TSA-Data-Science-Code",
+    "images": ["/projects/tsa-data-science/scientific-poster.jpg"],
+    "category": "Data Analytics"
+  },
+
+  {
+    "id": 5,
+    "title": "JStatsLib",
+    "description": "A comprehensive Java library for visualizing and analyzing one-dimensional datasets. JStatsLib supports multiple chart types including box plots, cumulative frequency graphs, pie charts, dot plots, and more. It features both predefined and customizable themes, distribution modeling, and a suite of fundamental and advanced statistical computations, all with a focus on simplicity and user experience.",
+    "shortDescription": "Java library for statistical analysis and visualization",
+    "technologies": ["Java", "Swing", "Gradle"],
+    "timeframe": "Mar 2025 - May 2025",
+    "githubLink": "https://github.com/Gourdy09/JStatsLib",
+    "images": [
+      "/projects/jstatslib/boxplot.png",
+      "/projects/jstatslib/cfg.png",
+      "/projects/jstatslib/dotplot.png",
+      "/projects/jstatslib/histogram.png",
+      "/projects/jstatslib/piechart.png",
+      "/projects/jstatslib/stats.png"
+    ],
+    "category": "Data Analytics"
+  },
+
+  {
+    "id": 6,
+    "title": "Doge Bot",
+    "description": "A real-time Discord chatbot designed to assist with server moderation, automate tasks, and enhance user engagement. Doge Bot includes advanced features such as server management tools, command handling, automated moderation, and real-time analytics. It successfully scaled to over 100 servers and 1,000+ users, with support for distributed processing and data persistence using Cassandra.",
+    "shortDescription": "Scalable real-time moderation bot for Discord",
+    "technologies": [
+      "JavaScript",
+      "Node.js",
+      "Batch",
+      "Networking",
+      "Sharding",
+      "Cassandra"
+    ],
+    "timeframe": "Feb 2020 - Mar 2021",
+    "githubLink": "https://github.com/Gourdy09/Doge-Bot/",
+    "images": ["/projects/dogebot/logo.jpg"],
+    "category": "Automation"
+  }
+]

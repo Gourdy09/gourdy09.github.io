@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "AI & Robotics Academy Developer",
+    "company": "Code Ninjas",
+    "location": "Houston, TX",
+    "type": "Part-time",
+    "startDate": "December 2023",
+    "endDate": "Present",
+    "description": "Researching and developing custom curricula for AI and Robotics education at Code Ninjas. Responsible for designing and teaching coursework that covers the development of AI technologies and their implementation in robotics. Develops hands-on projects and ensures that students gain practical experience with real-world AI and robotics systems.",
+    "skills": [
+      "TensorFlow",
+      "Loop",
+      "Project Management",
+      "Team Collaboration",
+      "Research",
+      "Curriculum Development",
+      "AI Education",
+      "Robotics Education"
+    ],
+    "achievements": [
+      "Currently creating 9 units of AI and Robotics coursework (1-2 years of content) for Code Ninjas Academy",
+      "Developing educational materials for implementation across 400+ Code Ninjas locations",
+      "Creating curriculum to impact over 30,000 students in the next year"
+    ],
+    "logo": "/images/codeninjas.jpeg"
+  },
+
+  {
+    "id": 2,
+    "title": "Founder & CEO",
+    "company": "Thrive",
+    "location": "Houston, TX",
+    "type": "Full-time",
+    "startDate": "April 2024",
+    "endDate": "Present",
+    "description": "Leading the development and research of AI-driven solutions for diabetes care. Overseeing the design and implementation of Continuous Glucose Monitoring (CGM) systems, real-time health data analytics, and mobile app solutions. Creating custom curricula for AI and robotics education in collaboration with Code Ninjas.",
+    "skills": [
+      "AI",
+      "Machine Learning",
+      "TensorFlow",
+      "Mobile App Development",
+      "Biotechnology",
+      "System Design",
+      "Project Management",
+      "Leadership"
+    ],
+    "achievements": [
+      "Developing AI-powered CGM systems for real-time diabetes monitoring and predictive analytics",
+      "Leading R&D initiatives to enhance diabetes management and prevention with cutting-edge technologies",
+      "Building partnerships with healthcare providers for integrating Thrive’s technology into patient care",
+      "Innovating in the digital health space by combining AI, IoT, and wearable devices to enhance patient outcomes"
+    ],
+    "logo": "/images/thrive.png"
+  }
+]

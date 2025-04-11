@@ -1,0 +1,22 @@
+[
+  {
+    "name": "github",
+    "link": "https://github.com/Gourdy09/",
+    "icon": "/icons/github.svg"
+  },
+  {
+    "name": "youtube",
+    "link": "https://www.youtube.com/@gourdy09",
+    "icon": "/icons/youtube.svg"
+  },
+  {
+    "name": "instagram",
+    "link": "https://www.instagram.com/not.ompatel/",
+    "icon": "/icons/instagram.svg"
+  },
+  {
+    "name": "linkedin",
+    "link": "https://www.linkedin.com/in/om-patel09/",
+    "icon": "/icons/linkedin.svg"
+  }
+]
