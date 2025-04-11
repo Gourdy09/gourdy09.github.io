@@ -71,25 +71,25 @@ function Hero() {
   };
 
   return (
-    // Wrapper
-    <div className="pt-60 bg-background flex items-center justify-center flex-col">
+    // Wrapper - Adjust padding for mobile
+    <div className="pt-32 sm:pt-40 md:pt-60 bg-background flex items-center justify-center flex-col px-4">
       {/* Content */}
       <motion.div
-        className="flex flex-col mb-40"
+        className="flex flex-col mb-20 sm:mb-40 w-full max-w-4xl border-2 gap-2 items-center sm:items-start"
         variants={container}
         initial="hidden"
         animate="show"
       >
-        {/* Top Row */}
+        {/* Top Row - Hidden on mobile */}
         <motion.div
-          className="flex flex-row gap-4 items-center"
+          className="hidden sm:flex flex-row gap-4 items-center"
           variants={item}
         >
           <Image
             className="rounded-full"
             src="/images/gourdpfp.svg"
-            width={52}
-            height={52}
+            width={40}
+            height={40}
             alt=""
           />
           <Chip
@@ -100,31 +100,34 @@ function Hero() {
         </motion.div>
 
         {/* Mid Row */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 sm:gap-4">
           <motion.div
-            className="flex flex-row gap-8 items-center"
+            className="flex flex-row items-center gap-16 align-middle"
             variants={item}
           >
             <motion.h1
-              className="text-8xl font-extrabold text-text"
+              className="text-4xl sm:text-6xl md:text-8xl font-extrabold text-text"
               ref={aiMagneticProps.ref as React.RefObject<HTMLHeadingElement>}
               style={{ x: aiMagneticProps.x, y: aiMagneticProps.y }}
             >
               <span className="text-primary">AI</span> &
             </motion.h1>
 
-            <Chip
-              image="/icons/available.svg"
-              text="Let's talk"
-              magnetic={true}
-              magneticAreaWidth={70}
-              magneticAreaHeight={70}
-              pulse={true}
-            />
+            {/* Let's talk chip - Hidden on mobile */}
+            <div className="hidden sm:flex">
+              <Chip
+                image="/icons/available.svg"
+                text="Let's talk"
+                magnetic={true}
+                magneticAreaWidth={70}
+                magneticAreaHeight={70}
+                pulse={true}
+              />
+            </div>
           </motion.div>
 
           <motion.h1
-            className="text-8xl font-extrabold text-secondary"
+            className="text-4xl sm:text-6xl md:text-8xl font-extrabold text-secondary"
             variants={item}
             ref={
               roboticsMagneticProps.ref as React.RefObject<HTMLHeadingElement>
@@ -135,7 +138,7 @@ function Hero() {
           </motion.h1>
 
           <motion.h1
-            className="text-8xl font-extrabold text-text"
+            className="text-4xl sm:text-6xl md:text-8xl font-extrabold text-text"
             variants={item}
             ref={
               developerMagneticProps.ref as React.RefObject<HTMLHeadingElement>
@@ -145,15 +148,15 @@ function Hero() {
             DEVELOPER
           </motion.h1>
 
-          <motion.h4 className="text-text text-xl" variants={item}>
+          <motion.h4 className="text-text text-base sm:text-xl" variants={item}>
             // Based in Houston, TX
           </motion.h4>
         </div>
       </motion.div>
 
-      {/* Bot Row */}
+      {/* Bot Row - Full width for mobile */}
       <motion.div
-        className="flex"
+        className="flex w-full"
         initial={{ opacity: 0, x: -200 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{

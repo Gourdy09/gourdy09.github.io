@@ -15,11 +15,11 @@ const ExperienceSection = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background px-8 md:px-16 lg:px-24 py-12">
+    <div className="min-h-screen bg-background px-4 sm:px-8 md:px-16 lg:px-24 py-8 sm:py-12">
       <div className="max-w-6xl mx-auto">
         {/* Experience Header with scroll animation */}
         <motion.div
-          className="mb-12"
+          className="mb-8 sm:mb-12"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -28,19 +28,19 @@ const ExperienceSection = () => {
             ease: [0.22, 1, 0.36, 1], // Custom ease for smooth animation
           }}
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary mb-2 sm:mb-4">
             EXPERIENCE
           </h2>
-          <p className="text-text text-lg">
+          <p className="text-text text-base sm:text-lg">
             // My professional journey and contributions
           </p>
         </motion.div>
 
         {/* Timeline */}
         <div className="relative">
-          {/* Animated Vertical Line */}
+          {/* Animated Vertical Line - adjusted for mobile positioning */}
           <motion.div
-            className="absolute left-0 md:left-1/2 transform md:translate-x-[-50%] w-px bg-accent origin-top"
+            className="absolute left-4 sm:left-0 md:left-1/2 transform md:translate-x-[-50%] w-px bg-accent origin-top"
             style={{ height: "100%" }}
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}

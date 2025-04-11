@@ -23,7 +23,7 @@
       "Developing educational materials for implementation across 400+ Code Ninjas locations",
       "Creating curriculum to impact over 30,000 students in the next year"
     ],
-    "logo": "/images/codeninjas.jpeg"
+    "logo": "./images/codeninjas.jpeg"
   },
 
   {
@@ -51,6 +51,6 @@
       "Building partnerships with healthcare providers for integrating Thrive’s technology into patient care",
       "Innovating in the digital health space by combining AI, IoT, and wearable devices to enhance patient outcomes"
     ],
-    "logo": "/images/thrive.png"
+    "logo": "./images/thrive.png"
   }
 ]

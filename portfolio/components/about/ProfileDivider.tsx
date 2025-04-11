@@ -25,7 +25,7 @@ const ProfileDivider = () => {
           }}
         >
           <Image
-            src="/images/gourdpfp.svg"
+            src="./images/gourdpfp.svg"
             alt="Om Patel"
             width={64}
             height={64}

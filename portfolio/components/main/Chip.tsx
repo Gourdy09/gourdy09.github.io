@@ -63,7 +63,7 @@ function Chip({
       <motion.div
         style={magnetic ? { x: magneticProps.x, y: magneticProps.y } : {}}
         ref={magneticProps.ref as React.RefObject<HTMLDivElement>}
-        className="flex flex-row align-middle gap-3 border border-primary rounded-full px-4 py-2 max-h-16 items-center mt-4 cursor-pointer"
+        className="flex flex-row align-middle gap-2 sm:gap-3 border border-primary rounded-full px-3 sm:px-4 py-1 sm:py-2 max-h-16 items-center cursor-pointer"
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
       >
@@ -95,7 +95,9 @@ function Chip({
             alt=""
           />
         )}
-        <h1 className="text-text pl-1 pr-4 pt-1 pb-1 text-xl">{text}</h1>
+        <h1 className="text-text pl-1 pr-2 sm:pr-4 pt-1 pb-1 text-sm sm:text-xl">
+          {text}
+        </h1>
       </motion.div>
     );
   }
@@ -104,11 +106,13 @@ function Chip({
     <motion.div
       style={magnetic ? { x: magneticProps.x, y: magneticProps.y } : {}}
       ref={magneticProps.ref as React.RefObject<HTMLDivElement>}
-      className="border border-primary rounded-full px-4 py-2 max-h-16"
+      className="border border-primary rounded-full px-3 sm:px-4 py-1 sm:py-2 max-h-16"
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
     >
-      <h1 className="text-text pl-4 pr-4 pt-1 pb-1 text-xl">{text}</h1>
+      <h1 className="text-text pl-2 sm:pl-4 pr-2 sm:pr-4 pt-1 pb-1 text-sm sm:text-xl">
+        {text}
+      </h1>
     </motion.div>
   );
 }

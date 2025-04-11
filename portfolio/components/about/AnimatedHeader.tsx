@@ -64,7 +64,9 @@ const AnimatedHeader = () => {
       >
         HEY, IM OM PATEL
       </motion.h1>
+      {/* This line will only be visible on md (tablet) screens and larger */}
       <motion.div
+        className="hidden md:block"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{
@@ -73,7 +75,7 @@ const AnimatedHeader = () => {
           delay: 0.4,
         }}
       >
-        <h3 className="text-2xl md:text-3xl mx-0 md:mx-12 text-text flex items-center h-12">
+        <h3 className="text-2xl md:text-3xl mx-4 md:mx-12 text-text flex items-center">
           // Currently Working On{" "}
           <span className="relative ml-2">
             <span ref={scope} className="inline-block">

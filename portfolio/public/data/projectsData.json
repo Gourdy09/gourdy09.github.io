@@ -7,7 +7,7 @@
     "technologies": ["Python", "TensorFlow", "React Native", "Firebase"],
     "timeframe": "Jan 2024 - Present",
     "githubLink": "https://github.com/Gourdy09/Thrive/",
-    "images": ["/projects/thrive/app-cover.png", "/projects/thrive/logo.png"],
+    "images": ["./projects/thrive/app-cover.png", "/projects/thrive/logo.png"],
     "category": "Artificial Intelligence"
   },
 
@@ -29,16 +29,16 @@
     "timeframe": "Sep 2024 – Feb 2025",
     "githubLink": "https://github.com/Gourdy09/HAQUSHAQ-vex-code",
     "images": [
-      "/projects/vex-robotics/1.png",
-      "/projects/vex-robotics/2.jpg",
-      "/projects/vex-robotics/3.jpg",
-      "/projects/vex-robotics/4.jpg",
-      "/projects/vex-robotics/5.jpg",
-      "/projects/vex-robotics/6.jpg",
-      "/projects/vex-robotics/7.jpg",
-      "/projects/vex-robotics/8.jpg",
-      "/projects/vex-robotics/9.jpg",
-      "/projects/vex-robotics/10.jpg"
+      "./projects/vex-robotics/1.png",
+      "./projects/vex-robotics/2.jpg",
+      "./projects/vex-robotics/3.jpg",
+      "./projects/vex-robotics/4.jpg",
+      "./projects/vex-robotics/5.jpg",
+      "./projects/vex-robotics/6.jpg",
+      "./projects/vex-robotics/7.jpg",
+      "./projects/vex-robotics/8.jpg",
+      "./projects/vex-robotics/9.jpg",
+      "./projects/vex-robotics/10.jpg"
     ],
     "category": "Robotics"
   },
@@ -52,10 +52,10 @@
     "timeframe": "Jun 2024 – Present",
     "liveLink": "https://sl95.framer.ai/",
     "images": [
-      "/projects/sl95/logo.jpg",
-      "/projects/sl95/sugar-factory.jpg",
-      "/projects/sl95/exhibit.jpg",
-      "/projects/sl95/exhibit-2.jpg"
+      "./projects/sl95/logo.jpg",
+      "./projects/sl95/sugar-factory.jpg",
+      "./projects/sl95/exhibit.jpg",
+      "./projects/sl95/exhibit-2.jpg"
     ],
     "category": "Game Development"
   },
@@ -75,7 +75,7 @@
     ],
     "timeframe": "Sep 2024 – Feb 2025",
     "githubLink": "https://github.com/Gourdy09/TSA-Data-Science-Code",
-    "images": ["/projects/tsa-data-science/scientific-poster.jpg"],
+    "images": ["./projects/tsa-data-science/scientific-poster.jpg"],
     "category": "Data Analytics"
   },
 
@@ -88,12 +88,12 @@
     "timeframe": "Mar 2025 - May 2025",
     "githubLink": "https://github.com/Gourdy09/JStatsLib",
     "images": [
-      "/projects/jstatslib/boxplot.png",
-      "/projects/jstatslib/cfg.png",
-      "/projects/jstatslib/dotplot.png",
-      "/projects/jstatslib/histogram.png",
-      "/projects/jstatslib/piechart.png",
-      "/projects/jstatslib/stats.png"
+      "./projects/jstatslib/boxplot.png",
+      "./projects/jstatslib/cfg.png",
+      "./projects/jstatslib/dotplot.png",
+      "./projects/jstatslib/histogram.png",
+      "./projects/jstatslib/piechart.png",
+      "./projects/jstatslib/stats.png"
     ],
     "category": "Data Analytics"
   },
@@ -113,7 +113,7 @@
     ],
     "timeframe": "Feb 2020 - Mar 2021",
     "githubLink": "https://github.com/Gourdy09/Doge-Bot/",
-    "images": ["/projects/dogebot/logo.jpg"],
+    "images": ["./projects/dogebot/logo.jpg"],
     "category": "Automation"
   }
 ]
