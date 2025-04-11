@@ -51,13 +51,13 @@ jobs:
       - name: Restore Next.js cache
         uses: actions/cache@v4
         with:
-          path: .next/cache
+          path: portfolio/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('portfolio/**/package-lock.json', 'portfolio/**/yarn.lock') }}-${{ hashFiles('portfolio/**/*.[jt]s', 'portfolio/**/*.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('portfolio/**/package-lock.json', 'portfolio/**/yarn.lock') }}-
 
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }} --prefix portfolio
 
       - name: Build Next.js site
         run: ${{ steps.detect-package-manager.outputs.runner }} next build --cwd portfolio
@@ -68,7 +68,7 @@ jobs:
       - name: Upload static site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./portfolio/out
+          path: portfolio/out
 
   deploy:
     needs: build
