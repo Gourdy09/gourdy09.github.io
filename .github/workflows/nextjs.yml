@@ -21,8 +21,8 @@ jobs:
         run: npm ci
         working-directory: portfolio
 
-      - name: Build and export
-        run: npm run export
+      - name: Build
+        run: npm run build
         working-directory: portfolio
 
       - name: Deploy to GitHub Pages
