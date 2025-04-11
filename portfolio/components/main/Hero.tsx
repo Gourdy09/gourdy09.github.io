@@ -75,7 +75,7 @@ function Hero() {
     <div className="pt-32 sm:pt-40 md:pt-60 bg-background flex items-center justify-center flex-col px-4">
       {/* Content */}
       <motion.div
-        className="flex flex-col mb-20 sm:mb-40 w-full max-w-4xl border-2 gap-2 items-center sm:items-start"
+        className="flex flex-col mb-20 sm:mb-40 w-full max-w-4xl border-2 gap-2 items-center sm:items-start sm:pl-48"
         variants={container}
         initial="hidden"
         animate="show"

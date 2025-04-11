@@ -4,8 +4,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: "/gourdy09.github.io",
-  assetPrefix: "/gourdy09.github.io",
 };
 
 module.exports = nextConfig;
