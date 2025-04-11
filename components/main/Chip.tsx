@@ -21,8 +21,6 @@ interface ChipProps {
 function Chip({
   text,
   image,
-  magneticAreaWidth = 70,
-  magneticAreaHeight = 70,
   magnetStrengthX = 0.4,
   magnetStrengthY = 0.4,
   width = 16,
@@ -30,7 +28,6 @@ function Chip({
   magnetic = false,
   pulse = false,
 }: ChipProps) {
-  // Only apply magnetic effect if magnetic prop is true
   const magneticProps = useMagneticEffect(
     magnetic
       ? {

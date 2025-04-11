@@ -2,7 +2,14 @@
 
 import React from "react";
 
-const FeatureCard = ({ title, description, link, linkText }: any) => (
+interface FeatureCardsProps{
+  title: string;
+  description: string;
+  link: string;
+  linkText: string;
+}
+
+const FeatureCard = ({ title, description, link, linkText }: FeatureCardsProps) => (
   <div className="bg-background-alt p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-all duration-300 bg-accent/20">
     <h3 className="text-2xl font-medium text-primary mb-3">{title}</h3>
     <p className="text-text mb-4">{description}</p>

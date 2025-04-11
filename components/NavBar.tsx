@@ -30,7 +30,6 @@ export default function Navbar() {
   }, []);
 
   const handleTabClick = (tabId: string) => {
-    // Just scroll, don't update selected tab on click
     document.getElementById(tabId)?.scrollIntoView({ behavior: "smooth" });
   };
 

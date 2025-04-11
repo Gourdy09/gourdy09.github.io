@@ -54,7 +54,6 @@ function Hero() {
     },
   };
 
-  // Modified animation to come from left with acceleration and deceleration
   const item = {
     hidden: { opacity: 0, x: -200 },
     show: {
@@ -71,7 +70,6 @@ function Hero() {
   };
 
   return (
-    // Wrapper - Adjust padding for mobile
     <div className="pt-32 sm:pt-40 md:pt-60 bg-background flex items-center justify-center flex-col px-4">
       {/* Content */}
       <motion.div

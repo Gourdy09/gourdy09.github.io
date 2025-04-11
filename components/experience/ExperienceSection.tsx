@@ -25,7 +25,7 @@ const ExperienceSection = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{
             duration: 0.6,
-            ease: [0.22, 1, 0.36, 1], // Custom ease for smooth animation
+            ease: [0.22, 1, 0.36, 1],
           }}
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary mb-2 sm:mb-4">

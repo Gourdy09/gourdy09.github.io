@@ -57,7 +57,7 @@ const AnimatedSocialLinks = () => {
       animate={scrollAnimation.controls}
       ref={scrollAnimation.ref}
     >
-      {socialLinks.map((social, index) => {
+      {socialLinks.map((social) => {
         const isIconHovered = hoveredIcon === social.name;
         const isAnyIconHovered = hoveredIcon !== null;
         const shouldShrink = isAnyIconHovered && !isIconHovered;

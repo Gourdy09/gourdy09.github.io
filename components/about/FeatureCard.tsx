@@ -4,7 +4,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 
-const FeatureCard = ({ title, description, link, linkText, index }: any) => {
+interface FeatureCardProps{
+  title: string;
+  description: string;
+  link: string;
+  linkText: string;
+  index: number;
+}
+
+const FeatureCard = ({ title, description, link, linkText, index }: FeatureCardProps) => {
   const cardAnimation = useScrollAnimation({
     threshold: 0.1,
     rootMargin: "-20px",

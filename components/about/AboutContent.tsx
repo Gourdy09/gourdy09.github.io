@@ -100,16 +100,16 @@ const AboutContent = () => {
         animate={textAnimation.controls}
       >
         <p className="text-lg md:text-lg">
-          Hey, I'm Om — a student, developer, and robotics enthusiast aiming to
-          build a future in AI, machine learning, and robotics. I've worked
-          hands-on with VEX and FTC robotics, led game development projects, and
-          taught programming to students through workshops and custom made
-          curricula.
+          Hey, I&apos;m Om — a student, developer, and robotics enthusiast
+          aiming to build a future in AI, machine learning, and robotics.
+          I&apos;ve worked hands-on with VEX and FTC robotics, led game
+          development projects, and taught programming to students through
+          workshops and custom made curricula.
         </p>
         <br />
         <p className="text-lg md:text-lg">
           Outside of work, you can find me tinkering with side projects, playing
-          games, or playing with new technology. I'm big on creativity and
+          games, or playing with new technology. I&apos;m big on creativity and
           always learning something new — whether that is through designing
           robots, or messing around with tech.
         </p>

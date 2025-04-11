@@ -1,6 +1,7 @@
 import React from "react";
 import { Experience } from "../../app/types/Experience";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -80,7 +81,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
             >
               {/* Using placeholder for demo - replace with actual logos */}
               <div className="text-lg font-bold text-primary object-scale-down">
-                <img src={experience.logo} alt="" />
+                <Image src={experience.logo} alt=""/>
               </div>
             </motion.div>
             <motion.div
