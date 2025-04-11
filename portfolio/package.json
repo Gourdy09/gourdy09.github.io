@@ -2,11 +2,11 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://gourdy09.github.io",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export",
     "deploy": "next build && next export && gh-pages -d out",
     "lint": "next lint"
   },
