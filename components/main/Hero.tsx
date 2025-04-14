@@ -113,14 +113,16 @@ function Hero() {
 
             {/* Let's talk chip - Hidden on mobile */}
             <div className="hidden sm:flex">
-              <Chip
-                image="/icons/available.svg"
-                text="Let's talk"
-                magnetic={true}
-                magneticAreaWidth={70}
-                magneticAreaHeight={70}
-                pulse={true}
-              />
+              <a href="mailto:patel.omtx@gmail.com">
+                <Chip
+                  image="/icons/available.svg"
+                  text="Let's talk"
+                  magnetic={true}
+                  magneticAreaWidth={70}
+                  magneticAreaHeight={70}
+                  pulse={true}
+                />
+              </a>
             </div>
           </motion.div>
 
