@@ -68,7 +68,7 @@ const AnimatedHeader = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.175, 0.885, 0.32, 1.275] }}
       >
-        HEY, I'M OM PATEL
+        HEY, I&apos;M OM PATEL
       </motion.h1>
       <motion.div
         className="hidden md:block"
