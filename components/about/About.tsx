@@ -3,7 +3,6 @@ import AnimatedHeader from "./AnimatedHeader";
 import ProfileDivider from "./ProfileDivider";
 import AboutContent from "./AboutContent";
 import FeatureCards from "./FeatureCards";
-import AnimatedSocialLinks from "./AnimatedSocialLinks";
 
 function About() {
   return (
