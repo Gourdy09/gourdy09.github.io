@@ -81,7 +81,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
             >
               {/* Using placeholder for demo - replace with actual logos */}
               <div className="text-lg font-bold text-primary object-scale-down">
-                <Image src={experience.logo} alt=""/>
+                <Image src={experience.logo} alt="" fill className="object-contain"/>
               </div>
             </motion.div>
             <motion.div

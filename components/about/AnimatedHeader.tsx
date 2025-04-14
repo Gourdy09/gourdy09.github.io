@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 
 const AnimatedHeader = () => {
   const [text, setText] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const cursorRef = React.useRef(null);
 
-  // Words to cycle through
   const words = [
     "AI",
     "Robotics",
@@ -16,7 +16,9 @@ const AnimatedHeader = () => {
     "Game Development",
   ];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    setIsClient(true);
+
     let currentWordIndex = 0;
     let isMounted = true;
 
@@ -26,39 +28,37 @@ const AnimatedHeader = () => {
 
         // Type the word
         for (let i = 0; i <= word.length; i++) {
-          if (!isMounted) break;
+          if (!isMounted) return;
           setText(word.substring(0, i));
-          await new Promise((resolve) => setTimeout(resolve, 50)); // 50ms per character
+          await new Promise((resolve) => setTimeout(resolve, 50));
         }
 
-        // Wait at full word
+        // Wait with full word
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        if (!isMounted) break;
+        if (!isMounted) return;
 
         // Delete the word
         for (let i = word.length; i >= 0; i--) {
-          if (!isMounted) break;
+          if (!isMounted) return;
           setText(word.substring(0, i));
-          await new Promise((resolve) => setTimeout(resolve, 40)); // 40ms per character deletion
+          await new Promise((resolve) => setTimeout(resolve, 40));
         }
 
-        // Small pause before next word
         await new Promise((resolve) => setTimeout(resolve, 500));
-        if (!isMounted) break;
+        if (!isMounted) return;
 
-        // Move to next word
         currentWordIndex = (currentWordIndex + 1) % words.length;
       }
     };
 
     cycleWords();
 
-    // Cleanup
     return () => {
       isMounted = false;
-      setText("");
     };
-  }, [words]);
+  }, []);
+
+  if (!isClient) return null;
 
   return (
     <div className="pt-20">
@@ -68,7 +68,7 @@ const AnimatedHeader = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.175, 0.885, 0.32, 1.275] }}
       >
-        HEY, IM OM PATEL
+        HEY, I'M OM PATEL
       </motion.h1>
       <motion.div
         className="hidden md:block"
@@ -83,7 +83,7 @@ const AnimatedHeader = () => {
         <h3 className="text-2xl md:text-3xl text-text flex items-center">
           <span>// Currently Working On</span>{" "}
           <span className="relative ml-2">
-            <span ref={cursorRef} className="inline-block">
+            <span ref={cursorRef} className="inline-block" key={text}>
               {text}
             </span>
           </span>
