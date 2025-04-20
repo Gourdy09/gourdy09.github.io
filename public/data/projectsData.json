@@ -85,7 +85,7 @@
     "description": "A comprehensive Java library for visualizing and analyzing one-dimensional datasets. JStatsLib supports multiple chart types including box plots, cumulative frequency graphs, pie charts, dot plots, and more. It features both predefined and customizable themes, distribution modeling, and a suite of fundamental and advanced statistical computations, all with a focus on simplicity and user experience.",
     "shortDescription": "Java library for statistical analysis and visualization",
     "technologies": ["Java", "Swing", "Gradle"],
-    "timeframe": "Mar 2025 - May 2025",
+    "timeframe": "Mar 2025 - Apr 2025",
     "githubLink": "https://github.com/Gourdy09/JStatsLib",
     "images": [
       "./projects/jstatslib/boxplot.png",
@@ -100,6 +100,43 @@
 
   {
     "id": 6,
+    "title": "Mathcord",
+    "description": "Mathcord is a powerful math assistant for Discord, built to provide advanced math tools in a seamless chat experience. It supports a wide range of commands including limit evaluation, matrix operations, probability calculations, expression rendering, graphing, equation solving, and more. Designed for students, educators, and math enthusiasts, Mathcord uses symbolic computation and graphing libraries to deliver real-time results with precision and clarity. I led the full development of Mathcord, from architecture and backend logic to Discord API integration and command design.",
+    "shortDescription": "Advanced math assistant Discord bot",
+    "technologies": [
+      "Node.js",
+      "Math.js",
+      "Canvas",
+      "Discord.js",
+      "LaTeX",
+      "Chart.js"
+    ],
+    "timeframe": "Mar 2025 - Current",
+    "liveLink": "https://discord.gg/WcGRMwkeuq/",
+    "githubLink": "https://github.com/Gourdy09/mathcord/",
+    "images": [
+      "./projects/mathcord/logo.png",
+      "./projects/mathcord/commands.png",
+      "./projects/mathcord/graph-demo.png",
+      "./projects/mathcord/normal-dist-demo.png"
+    ],
+    "category": "Automation"
+  },
+
+  {
+    "id": 7,
+    "title": "Zephyr (WIP)",
+    "description": "Zephyr is an AI-powered typing test platform designed to go beyond simple speed tests by offering intelligent, personalized lessons to improve typing accuracy, speed, and consistency over time. Still in development, Zephyr leverages AI to analyze user performance, adapt difficulty levels, and deliver tailored practice sessions. Planned features include leaderboards, auto-cheat detection, Supabase authentication, and real-time performance analytics. I’m building Zephyr from the ground up with React, Next.js, and Supabase, focusing on creating an intuitive, fun, and effective learning experience.",
+    "shortDescription": "AI typing platform with personalized training",
+    "technologies": ["React", "Next.js", "Supabase", "Tailwind", "TensorFlow"],
+    "timeframe": "Apr 2025 – Present",
+    "githubLink": "https://github.com/Gourdy09/zephyr/",
+    "images": ["./projects/zephyr/zephyr-logo.svg"],
+    "category": "Artificial Intelligence"
+  },
+
+  {
+    "id": 8,
     "title": "Doge Bot",
     "description": "A real-time Discord chatbot designed to assist with server moderation, automate tasks, and enhance user engagement. Doge Bot includes advanced features such as server management tools, command handling, automated moderation, and real-time analytics. It successfully scaled to over 100 servers and 1,000+ users, with support for distributed processing and data persistence using Cassandra.",
     "shortDescription": "Scalable real-time moderation bot for Discord",
