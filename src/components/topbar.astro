@@ -1,0 +1,92 @@
+---
+interface Props {
+  user?: string;
+  host?: string;
+}
+
+const { user = "ompatel", host = "portfolio" } = Astro.props;
+const home = import.meta.env.BASE_URL;
+---
+
+<header class="topbar">
+  <a class="home" id="home-link" href={home} aria-label="Go to home">
+    {user}@{host}: ~
+  </a>
+  <time class="clock" id="clock">00:00:00</time>
+</header>
+
+<style>
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200; /* above the splash (100) and everything on the site */
+    height: var(--topbar-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 1rem;
+    background: var(--term);
+    border-bottom: 1px solid var(--line);
+    color: var(--dim);
+    font: 400 clamp(11px, 0.7vw + 6px, 14px) / 1 var(--mono);
+  }
+
+  .home {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dim);
+    transition: color 0.15s;
+  }
+  .home:hover,
+  .home:focus-visible {
+    color: var(--fg);
+  }
+  .home:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .clock {
+    flex-shrink: 0;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<script>
+  import { lenis } from "../setup/lenis";
+
+  const clock = document.getElementById("clock");
+  const link = document.getElementById("home-link") as HTMLAnchorElement | null;
+
+  function tick() {
+    if (clock) {
+      clock.textContent = new Date().toLocaleTimeString([], {
+        hourCycle: "h23",
+      });
+    }
+  }
+  tick();
+  window.setInterval(tick, 1000);
+
+  link?.addEventListener("click", (e) => {
+    const target = new URL(link.href, location.href);
+
+    if (location.pathname === target.pathname) {
+      // Already home: just scroll to the top, no reload, so the terminal doesn't replay.
+      e.preventDefault();
+      history.replaceState(null, "", target.pathname);
+      lenis.scrollTo(0);
+    } else {
+      // Coming from another page: tell the next load to skip the splash (one time only).
+      try {
+        sessionStorage.setItem("skip-splash", "1");
+      } catch {}
+    }
+  });
+</script>

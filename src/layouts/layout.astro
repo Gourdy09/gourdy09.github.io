@@ -1,13 +1,16 @@
 ---
-import '@fontsource-variable/jetbrains-mono';
-import '@fontsource-variable/instrument-sans';
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/instrument-sans";
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/instrument-sans";
+import Topbar from "../components/topbar.astro";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const { title = 'Your Name', description = 'Portfolio' } = Astro.props;
+const { title = "Om Patel", description = "Portfolio" } = Astro.props;
 ---
 
 <!doctype html>
@@ -18,34 +21,46 @@ const { title = 'Your Name', description = 'Portfolio' } = Astro.props;
     <meta name="description" content={description} />
     <title>{title}</title>
 
-    <!-- Runs before first paint: skip the splash on repeat visits / reduced motion -->
+    <!-- Splash plays on every load/refresh. Skipped for reduced-motion users,
+         and once when arriving via the top bar's home link. -->
     <script is:inline>
-      try {
-        if (sessionStorage.getItem('splash-seen')) {
-          document.documentElement.classList.add('no-splash');
-        }
-      } catch (e) {}
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('no-splash');
-      }
+      (function () {
+        var skip = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        try {
+          if (sessionStorage.getItem("skip-splash")) {
+            skip = true;
+            sessionStorage.removeItem("skip-splash");
+          }
+        } catch (e) {}
+        if (skip) document.documentElement.classList.add("no-splash");
+      })();
     </script>
 
     <noscript>
       <style is:inline>
-        .splash { display: none !important; }
-        .hero .inner { transform: none !important; }
-        .hero [data-fade] { opacity: 1 !important; transform: none !important; }
+        .splash {
+          display: none !important;
+        }
+        .hero .inner {
+          transform: none !important;
+        }
+        .hero [data-fade] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
       </style>
     </noscript>
   </head>
 
   <body>
+    <Topbar />
     <slot />
   </body>
 </html>
 
 <style is:global>
   :root {
+    --topbar-h: 2.5rem;
     /* coal / cream / red */
     --bg: #141211;
     --term: #1b1816;
@@ -54,21 +69,33 @@ const { title = 'Your Name', description = 'Portfolio' } = Astro.props;
     --accent: #e0402f;
     --line: rgba(239, 230, 212, 0.12);
 
-    --mono: 'JetBrains Mono Variable', ui-monospace, monospace;
-    --sans: 'Instrument Sans Variable', system-ui, sans-serif;
+    --mono: "JetBrains Mono Variable", ui-monospace, monospace;
+    --sans: "Instrument Sans Variable", system-ui, sans-serif;
   }
 
-  *, *::before, *::after { box-sizing: border-box; }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-  html { background: var(--bg); color: var(--fg); }
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    scroll-padding-top: var(--topbar-h);
+  }
 
   body {
     margin: 0;
+    padding-top: var(--topbar-h);
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  a { color: inherit; text-decoration: none; }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
   /* Shared by the splash prompt and the hero's closing prompt */
   .cursor {
@@ -79,12 +106,20 @@ const { title = 'Your Name', description = 'Portfolio' } = Astro.props;
     vertical-align: text-bottom;
     background: var(--accent);
   }
-  .cursor.blink { animation: blink 1.05s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
+  .cursor.blink {
+    animation: blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
 
-  .no-splash .splash { display: none; }
+  .no-splash .splash {
+    display: none;
+  }
 </style>
 
 <script>
-  import '../setup/lenis';
+  import "../setup/lenis";
 </script>

@@ -24,7 +24,19 @@ const { name, tagline, links = [] } = Astro.props;
   </h1>
 
   <p class="echo" data-fade>
-    <span class="path">~/portfolio</span> <span class="sigil">%</span><span class="cursor blink"></span>
+    <span class="path">~/portfolio/about</span>
+    <span class="sigil">%</span><span class="cursor blink"></span>
+  </p>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lacus eu
+    ligula lobortis varius. Fusce euismod ut arcu quis luctus. Sed laoreet
+    ultrices urna ac elementum. Ut consectetur hendrerit ullamcorper. Quisque
+    eleifend sit amet tortor in lobortis. Suspendisse velit felis, fringilla vel
+    felis in, pulvinar placerat nisl. In lectus nunc, sagittis id lectus vitae,
+    mollis eleifend justo. Maecenas dignissim, est sed rhoncus malesuada, orci
+    augue dictum nulla, vehicula vehicula magna nisl eget nulla. Curabitur non
+    sem tincidunt dui scelerisque pharetra. In hac habitasse platea dictumst.
+    Morbi sit amet eros mi.
   </p>
 </section>
 
@@ -43,7 +55,9 @@ const { name, tagline, links = [] } = Astro.props;
     color: var(--dim);
   }
   nav a:hover,
-  nav a:focus-visible { color: var(--fg); }
+  nav a:focus-visible {
+    color: var(--fg);
+  }
 
   h1 {
     align-self: center;
@@ -54,26 +68,49 @@ const { name, tagline, links = [] } = Astro.props;
     line-height: 1;
     letter-spacing: -0.035em;
   }
-  .mask { display: block; overflow: hidden; padding-bottom: 0.08em; }
-  .inner { display: block; transform: translateY(110%); }
-  .dim { color: var(--dim); }
+  .mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+  .inner {
+    display: block;
+    transform: translateY(110%);
+  }
+  .dim {
+    color: var(--dim);
+  }
 
-  .echo { margin: 0; font: 400 0.9rem var(--mono); }
-  .path { color: var(--dim); }
-  .sigil { color: var(--accent); }
+  .echo {
+    margin: 0;
+    font: 400 0.9rem var(--mono);
+  }
+  .path {
+    color: var(--dim);
+  }
+  .sigil {
+    color: var(--accent);
+  }
 
-  [data-fade] { opacity: 0; transform: translateY(12px); }
+  [data-fade] {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 </style>
 
 <script>
-  import gsap from 'gsap';
+  import gsap from "gsap";
 
   const play = () =>
     gsap
-      .timeline({ defaults: { ease: 'power3.out' } })
-      .to('.hero .inner', { y: 0, duration: 1.1, stagger: 0.12 })
-      .to('.hero [data-fade]', { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, '-=0.7');
+      .timeline({ defaults: { ease: "power3.out" } })
+      .to(".hero .inner", { y: 0, duration: 1.1, stagger: 0.12 })
+      .to(
+        ".hero [data-fade]",
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 },
+        "-=0.7",
+      );
 
-  if (document.documentElement.classList.contains('no-splash')) play();
-  else window.addEventListener('splash:reveal', play, { once: true });
+  if (document.documentElement.classList.contains("no-splash")) play();
+  else window.addEventListener("splash:reveal", play, { once: true });
 </script>
