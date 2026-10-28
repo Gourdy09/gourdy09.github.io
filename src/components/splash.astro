@@ -1,0 +1,460 @@
+---
+interface Field {
+  key: string;
+  value?: string;
+  /** Rows the splash updates while it runs */
+  live?: 'uptime' | 'cpu' | 'mem';
+}
+
+interface Props {
+  user?: string;
+  host?: string;
+  /** The command the visitor has to type */
+  command?: string;
+  /** neofetch rows, in order */
+  fields?: Field[];
+}
+
+const { user = 'you', host = 'portfolio', command = 'init', fields = [] } = Astro.props;
+
+const title = `${user}@${host}`;
+const rule = '-'.repeat(title.length);
+
+// neofetch's two rows of color blocks, in the site palette
+const blocks = [
+  ['#2a2522', '#5a1f18', '#9b2c20', '#e0402f', '#8c8478', '#c9b79c', '#efe6d4', '#faf5ea'],
+  ['#3a332f', '#7a2a20', '#c23a2a', '#ff5a45', '#a69d90', '#ddcdb2', '#f6eddc', '#ffffff'],
+];
+---
+
+<!-- Frontmatter values can't reach a bundled <script>, so pass them via data attributes -->
+<div class="splash" id="splash" data-command={command} data-user={user} data-host={host}>
+  <div class="term" id="term">
+    <header class="titlebar">
+      <span class="title">{title}: ~</span>
+      <time class="clock" id="clock">00:00:00</time>
+    </header>
+
+    <div class="screen" id="screen">
+      <!-- neofetch -->
+      <section class="fetch">
+<pre class="art" aria-hidden="true">                __
+                ||
+             .-'  '-.
+           /          \
+          / <span class="eye">@@@</span>    <span class="eye">@@@</span> \
+          | <span class="eye">@@@</span>    <span class="eye">@@@</span> |
+          |   <span class="eye">______</span>   |
+          |            |
+           \          /
+            \        /
+          /            \
+        /                \
+       /                  \
+      /                    \
+     /                      \
+     |                      |
+     |                      |
+     |                      |
+     |                      |
+      \                    /
+        \                /
+          '-.________.-'</pre>
+
+        <div class="info">
+          <div class="line"><span class="k">{user}</span>@<span class="k">{host}</span></div>
+          <div class="line">{rule}</div>
+
+          {fields.map((f) => (
+            <div class="line"><span class="k">{f.key}</span>: <span data-live={f.live}>{f.value}</span></div>
+          ))}
+
+          <div class="line"></div>
+          {blocks.map((row) => (
+            <div class="line blocks">{row.map((color) => <i style={`background:${color}`} />)}</div>
+          ))}
+        </div>
+      </section>
+
+      <!-- everything typed or printed after neofetch -->
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+
+  <p class="hint" id="hint">type <b>{command}</b> and press enter · esc to skip</p>
+
+  <!-- Real input so typing works everywhere, including mobile keyboards -->
+  <input
+    class="ghost"
+    id="ghost"
+    type="text"
+    autocomplete="off"
+    autocapitalize="off"
+    spellcheck="false"
+    aria-label="Terminal input"
+  />
+</div>
+
+<style>
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--bg);
+    clip-path: inset(0% 0% 0% 0%);
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  /* ---------- window ---------- */
+  .term {
+    width: min(100%, 880px);
+    background: var(--term);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    font: 400 clamp(8.5px, 2.35vw, 13.5px) / 1.35 var(--mono);
+  }
+  .titlebar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--dim);
+    font-size: 0.9em;
+  }
+  .clock { color: var(--fg); font-variant-numeric: tabular-nums; }
+
+  .screen {
+    height: min(70svh, 560px);
+    padding: 1rem 1.1rem;
+    overflow: hidden;
+    color: var(--fg);
+  }
+
+  /* ---------- neofetch ---------- */
+  .fetch {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: 3ch;
+    align-items: start;
+    margin-bottom: 1.35em;
+  }
+  .art {
+    margin: 0;
+    font: inherit;
+    line-height: inherit;
+    color: var(--fg);
+    opacity: 0;
+  }
+  .eye { color: var(--accent); }
+
+  .info > * { opacity: 0; }
+  .k { color: var(--accent); font-weight: 700; }
+
+  .blocks i {
+    display: inline-block;
+    width: 3ch;
+    height: 1.35em;
+    vertical-align: top;
+  }
+
+  /* lines are also created in JS, hence :global */
+  .splash :global(.line) { white-space: pre; min-height: 1.35em; }
+  .splash :global(.red) { color: var(--accent); }
+  .splash :global(.dim) { color: var(--dim); }
+  .splash :global(.b) { font-weight: 700; }
+  .splash :global(.gap) { margin-top: 0.7em; }
+
+  /* ---------- hint + hidden input ---------- */
+  .hint {
+    margin: 0;
+    color: var(--dim);
+    font: 400 0.75rem var(--mono);
+    text-align: center;
+  }
+  .hint b { color: var(--fg); font-weight: 500; }
+
+  .ghost {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    font-size: 16px; /* stops iOS zooming in on focus */
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { lenis } from '../setup/lenis';
+
+  const root = document.getElementById('splash') as HTMLElement | null;
+  const skipped = !root || document.documentElement.classList.contains('no-splash');
+
+  if (skipped) lenis.start();
+  else play(root!);
+
+  function play(root: HTMLElement) {
+    lenis.stop();
+
+    const $ = <T extends Element>(sel: string) => root.querySelector(sel) as T;
+    const rand = gsap.utils.random;
+    const clamp = gsap.utils.clamp;
+
+    const COMMAND = root.dataset.command ?? 'init';
+    const USER = root.dataset.user ?? 'you';
+    const HOST = root.dataset.host ?? 'portfolio';
+
+    /** What the fake "agent" appears to do after init. Edit freely. */
+    const STEPS = [
+      { tool: 'Read', arg: 'profile.json', result: 'Read 42 lines' },
+      { tool: 'Glob', arg: 'projects/**/*.mdx', result: 'Found 6 files' },
+      { tool: 'Bash', arg: 'npm run build', result: 'Built in 1.4s' },
+      { tool: 'Write', arg: 'src/pages/index.astro', result: 'Wrote 64 lines' },
+    ];
+
+    const term = $<HTMLElement>('#term');
+    const screen = $<HTMLElement>('#screen');
+    const log = $<HTMLElement>('#log');
+    const hint = $<HTMLElement>('#hint');
+    const ghost = $<HTMLInputElement>('#ghost');
+    const clock = $<HTMLElement>('#clock');
+
+    /* =====================================================
+       Live clock, uptime, CPU and memory
+       ===================================================== */
+    const live = (name: string) => root.querySelector(`[data-live="${name}"]`) as HTMLElement | null;
+    const uptimeEl = live('uptime');
+    const cpuEl = live('cpu');
+    const memEl = live('mem');
+
+    const RAM_TOTAL = 15896; // MiB
+    const startedAt = Date.now();
+    const baseUptime = Math.floor(rand(15, 50)) * 60 + Math.floor(rand(0, 59));
+
+    const stats = { cpu: 4, ram: 2134, cpuTarget: 5, ramTarget: 2200 };
+    const setLoad = (cpu: number, ram: number) => {
+      stats.cpuTarget = cpu;
+      stats.ramTarget = ram;
+    };
+
+    const bar = (pct: number) => {
+      const n = Math.round(pct / 10);
+      return `[${'='.repeat(n)}${'-'.repeat(10 - n)}] ${Math.round(pct)}%`;
+    };
+
+    function renderStats() {
+      if (cpuEl) cpuEl.textContent = bar(stats.cpu);
+      if (memEl) memEl.textContent = `${Math.round(stats.ram)}MiB / ${RAM_TOTAL}MiB`;
+    }
+
+    function tickClock() {
+      clock.textContent = new Date().toLocaleTimeString([], { hourCycle: 'h23' });
+      if (uptimeEl) {
+        const s = baseUptime + Math.floor((Date.now() - startedAt) / 1000);
+        uptimeEl.textContent = `${Math.floor(s / 60)} mins, ${s % 60} secs`;
+      }
+    }
+
+    renderStats();
+    tickClock();
+    const clockTimer = window.setInterval(tickClock, 1000);
+    const statsTimer = window.setInterval(() => {
+      const busy = stats.cpuTarget > 40;
+      stats.cpu = clamp(1, 99, stats.cpu + (stats.cpuTarget - stats.cpu) * 0.4 + rand(-1, 1) * (busy ? 5 : 1.5));
+      stats.ram = clamp(1000, RAM_TOTAL - 300, stats.ram + (stats.ramTarget - stats.ram) * 0.25 + rand(-40, 40) * (busy ? 3 : 1));
+      renderStats();
+    }, 200);
+
+    /* =====================================================
+       Terminal helpers
+       ===================================================== */
+    function addLine(parts: [string, string?][], before?: Element | null) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      const spans = parts.map(([text, cls]) => {
+        const s = document.createElement('span');
+        s.textContent = text;
+        if (cls) s.className = cls;
+        line.append(s);
+        return s;
+      });
+      log.insertBefore(line, before ?? null);
+      screen.scrollTop = screen.scrollHeight;
+      return { line, spans };
+    }
+
+    let typed!: HTMLElement;
+    let cursor!: HTMLElement;
+
+    function newPrompt() {
+      const { line } = addLine([[`${USER}@${HOST}`, 'red b'], [':~$ ']]);
+      typed = document.createElement('span');
+      cursor = document.createElement('span');
+      cursor.className = 'cursor blink';
+      line.append(typed, cursor);
+    }
+
+    /* =====================================================
+       1. Boot: neofetch prints line by line
+       ===================================================== */
+    let locked = true;
+    let idleTimer: number | undefined;
+    let run: gsap.core.Timeline | undefined;
+
+    const boot = gsap.timeline({
+      onComplete: () => {
+        newPrompt();
+        locked = false;
+        ghost.focus({ preventScroll: true });
+        idleTimer = window.setTimeout(autoType, 5500);
+      },
+    });
+    boot.to($('.art'), { opacity: 1, duration: 0.4 }, 0.2);
+    boot.to(root.querySelectorAll('.info > *'), { opacity: 1, duration: 0.2, stagger: 0.05 }, 0.2);
+
+    /* =====================================================
+       2. The visitor types the command (or we type it for them)
+       ===================================================== */
+    root.addEventListener('click', () => { if (!locked) ghost.focus({ preventScroll: true }); });
+
+    ghost.addEventListener('input', () => {
+      if (locked) { ghost.value = ''; return; }
+      window.clearTimeout(idleTimer);
+      cursor.classList.remove('blink');
+      typed.textContent = ghost.value;
+    });
+
+    ghost.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' || locked) return;
+      e.preventDefault();
+      const cmd = ghost.value.trim();
+      ghost.value = '';
+      submit(cmd);
+    });
+
+    function autoType() {
+      locked = true;
+      cursor.classList.remove('blink');
+      const t = gsap.timeline();
+      [...COMMAND].forEach((_, i) => {
+        t.call(() => { typed.textContent = COMMAND.slice(0, i + 1); }, [], `+=${rand(0.12, 0.22)}`);
+      });
+      t.call(() => submit(COMMAND), [], '+=0.4');
+    }
+
+    function submit(cmd: string, fast = false) {
+      if (run) return;
+      cursor.classList.remove('blink');
+      cursor.style.display = 'none';
+
+      if (cmd === '') return newPrompt();
+      if (cmd !== COMMAND) {
+        addLine([[`zsh: command not found: ${cmd}`]]);
+        return newPrompt();
+      }
+
+      locked = true;
+      ghost.blur();
+      init(fast);
+    }
+
+    /* =====================================================
+       3. init: claude-code style output, then the site loads
+       ===================================================== */
+    const FRAMES = ['·', '✢', '✳', '✶', '✻', '✽'];
+    let spin: { line: HTMLElement; glyph: HTMLElement; label: HTMLElement } | undefined;
+    let spinTimer: number | undefined;
+
+    function startSpinner() {
+      const spinStart = Date.now();
+      const { line, spans } = addLine([['✻ ', 'red'], ['Initializing… '], ['(0s · esc to interrupt)', 'dim']]);
+      line.classList.add('gap');
+      spin = { line, glyph: spans[0], label: spans[2] };
+
+      let frame = 0;
+      spinTimer = window.setInterval(() => {
+        frame = (frame + 1) % FRAMES.length;
+        spin!.glyph.textContent = `${FRAMES[frame]} `;
+        spin!.label.textContent = `(${Math.floor((Date.now() - spinStart) / 1000)}s · esc to interrupt)`;
+      }, 130);
+    }
+
+    function stopSpinner() {
+      window.clearInterval(spinTimer);
+      spin?.line.remove();
+      spin = undefined;
+    }
+
+    function init(fast: boolean) {
+      window.clearTimeout(idleTimer);
+      gsap.to(hint, { opacity: 0, duration: 0.3 });
+      setLoad(58, 6500);
+
+      run = gsap.timeline({ onComplete: finish });
+      if (fast) run.timeScale(8);
+
+      run.call(() => {
+        const { line } = addLine([['● ', 'red'], ['Initializing your portfolio. I’ll read the profile, load the projects and build the site.']]);
+        line.classList.add('gap');
+        startSpinner();
+      }, [], 0.3);
+
+      STEPS.forEach((step, i) => {
+        run!.call(() => {
+          addLine([['● ', 'red'], [step.tool, 'b'], [`(${step.arg})`, 'dim']], spin?.line);
+          setLoad(58 + (36 * i) / STEPS.length, 6500 + (6000 * i) / STEPS.length);
+        }, [], `+=${rand(0.45, 0.8)}`);
+
+        run!.call(() => {
+          addLine([['  ⎿  ', 'dim'], [step.result, 'dim']], spin?.line);
+        }, [], `+=${rand(0.35, 0.7)}`);
+      });
+
+      run.call(() => {
+        stopSpinner();
+        const { line } = addLine([['● ', 'red'], ['Done. Launching the site…']]);
+        line.classList.add('gap');
+        setLoad(92, 13500);
+      }, [], '+=0.8');
+
+      // load the site
+      run.add('reveal', '>+=0.9');
+      run.call(() => run!.timeScale(1), [], 'reveal'); // end any fast-forward from "skip"
+      run.call(() => setLoad(8, 3000), [], 'reveal');
+      run.to(term, { opacity: 0, y: -16, scale: 0.98, duration: 0.45, ease: 'power2.in' }, 'reveal');
+      run.call(() => window.dispatchEvent(new Event('splash:reveal')), [], 'reveal+=0.35');
+      run.to(root, { clipPath: 'inset(0% 0% 100% 0%)', duration: 1, ease: 'expo.inOut' }, 'reveal+=0.35');
+    }
+
+    /* =====================================================
+       Skip + cleanup
+       ===================================================== */
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (run) return void run.timeScale(8);
+
+      boot.progress(1); // finish printing neofetch
+      window.clearTimeout(idleTimer);
+      typed.textContent = COMMAND;
+      submit(COMMAND, true);
+    };
+    window.addEventListener('keydown', onKey);
+
+    function finish() {
+      window.clearInterval(clockTimer);
+      window.clearInterval(statsTimer);
+      window.clearInterval(spinTimer);
+      window.removeEventListener('keydown', onKey);
+      root.remove();
+      lenis.start();
+      try { sessionStorage.setItem('splash-seen', '1'); } catch {}
+    }
+  }
+</script>

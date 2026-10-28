@@ -1,0 +1,79 @@
+---
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  name: string;
+  tagline: string;
+  links?: NavLink[];
+}
+
+const { name, tagline, links = [] } = Astro.props;
+---
+
+<section class="hero">
+  <nav data-fade>
+    {links.map((link) => <a href={link.href}>{link.label}</a>)}
+  </nav>
+
+  <h1>
+    <span class="mask"><span class="inner">{name}</span></span>
+    <span class="mask"><span class="inner dim">{tagline}</span></span>
+  </h1>
+
+  <p class="echo" data-fade>
+    <span class="path">~/portfolio</span> <span class="sigil">%</span><span class="cursor blink"></span>
+  </p>
+</section>
+
+<style>
+  .hero {
+    min-height: 100svh;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.75rem;
+    font-size: 0.95rem;
+    color: var(--dim);
+  }
+  nav a:hover,
+  nav a:focus-visible { color: var(--fg); }
+
+  h1 {
+    align-self: center;
+    margin: 0;
+    max-width: 14ch;
+    font-weight: 500;
+    font-size: clamp(2.75rem, 9vw, 7.5rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .mask { display: block; overflow: hidden; padding-bottom: 0.08em; }
+  .inner { display: block; transform: translateY(110%); }
+  .dim { color: var(--dim); }
+
+  .echo { margin: 0; font: 400 0.9rem var(--mono); }
+  .path { color: var(--dim); }
+  .sigil { color: var(--accent); }
+
+  [data-fade] { opacity: 0; transform: translateY(12px); }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  const play = () =>
+    gsap
+      .timeline({ defaults: { ease: 'power3.out' } })
+      .to('.hero .inner', { y: 0, duration: 1.1, stagger: 0.12 })
+      .to('.hero [data-fade]', { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, '-=0.7');
+
+  if (document.documentElement.classList.contains('no-splash')) play();
+  else window.addEventListener('splash:reveal', play, { once: true });
+</script>

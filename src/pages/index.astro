@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Splash from '../components/Splash.astro';
+import Hero from '../components/Hero.astro';
+
+const name = 'Your Name';
+
+const links = [
+  { label: 'Work', href: '#work' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
+
+// neofetch rows, in order. Rows with `live` are updated by the splash.
+const fields = [
+  { key: 'OS', value: 'Arch Linux x86_64' },
+  { key: 'Host', value: 'portfolio' },
+  { key: 'Kernel', value: '6.11.2-arch1-1' },
+  { key: 'Uptime', live: 'uptime' as const },
+  { key: 'Packages', value: '1042 (pacman)' },
+  { key: 'Shell', value: 'zsh 5.9' },
+  { key: 'Resolution', value: '2560x1440' },
+  { key: 'WM', value: 'Hyprland' },
+  { key: 'Terminal', value: 'kitty' },
+  { key: 'CPU', value: 'AMD Ryzen 7 5800X (16) @ 3.800GHz' },
+  { key: 'GPU', value: 'NVIDIA GeForce RTX 3070' },
+  { key: 'CPU Usage', live: 'cpu' as const },
+  { key: 'Memory', live: 'mem' as const },
+];
+---
+
+<Layout title={name} description={`${name}'s portfolio`}>
+  <Splash user="yourname" host="portfolio" command="init" {fields} />
+
+  <main>
+    <Hero {name} tagline="designs and builds for the web." {links} />
+
+    <section id="work">
+      <!-- your projects go here -->
+    </section>
+  </main>
+</Layout>
+
+<style>
+  #work {
+    min-height: 100svh;
+    padding: 2.5rem;
+  }
+</style>
