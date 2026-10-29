@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "show": true,
+  "title": "Full Demo",
+  "description": "Exercises every resource type: images, README sections, a PDF, a notebook preview, a looping video, a web demo and a Codespaces link.",
+  "category": "Robotics",
+  "tags": ["Python", "OpenCV", "Embedded Systems"],
+  "featured": true,
+  "images": [
+    { "src": "assets/preview.svg", "alt": "Tracking prototype preview" }
+  ],
+  "content": { "readme": true, "sections": ["Overview", "Results"] },
+  "resources": [
+    {
+      "type": "video",
+      "title": "Robotics Demonstration",
+      "url": "assets/demo.webm",
+      "poster": "assets/preview.svg",
+      "display": "embed"
+    },
+    { "type": "webpage", "title": "Live Demo", "url": "https://example.com", "display": "embed" },
+    { "type": "pdf", "title": "Research Paper", "url": "docs/paper.pdf", "display": "embed" },
+    { "type": "notebook", "title": "Model Experiments", "url": "notebooks/experiments.ipynb", "display": "preview" },
+    { "type": "codespace", "title": "Open Development Environment" },
+    { "type": "repo", "title": "Source", "url": "src/" }
+  ]
+}

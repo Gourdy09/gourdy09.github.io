@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "show": true,
+  "title": "Compact Demo",
+  "description": "A project that only provides a description. It renders as a small panel with a repository link and no empty sections.",
+  "category": "Software Library"
+}

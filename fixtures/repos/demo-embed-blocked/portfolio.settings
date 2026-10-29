@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "show": true,
+  "title": "Unsafe Resources Demo",
+  "description": "Exercises the fallbacks: an unreachable embed, an unknown resource type, a missing image and bad URLs.",
+  "category": "Test",
+  "tags": ["fallbacks"],
+  "images": [{ "src": "assets/does-not-exist.png", "alt": "missing" }],
+  "resources": [
+    { "type": "webpage", "title": "Blocked Embed", "url": "https://github.com/", "display": "embed" },
+    { "type": "webpage", "title": "Bad Scheme", "url": "javascript:alert(1)" },
+    { "type": "hologram", "title": "Unknown Type", "url": "https://example.com/holo" },
+    { "type": "pdf", "title": "Traversal", "url": "../../etc/passwd.pdf" }
+  ]
+}

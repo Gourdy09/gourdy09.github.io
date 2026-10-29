@@ -1,0 +1,40 @@
+---
+/** Generic project panel. Consumes one normalized project; sections only render when they have content. */
+import type { Project } from '../lib/projectMetadata';
+import { isCompact } from '../lib/projectMetadata';
+import { assetUrl } from '../lib/projects';
+import Resource from './resource.astro';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+---
+
+<article class="pp" data-compact={isCompact(p) ? '1' : '0'}>
+  <header class="pp-head">
+    <h2>{p.title}</h2>
+    <p class="pp-meta">
+      {p.category && <span>{p.category}</span>}
+      <a href={p.repo.url} target="_blank" rel="noopener noreferrer">{p.repo.owner}/{p.repo.name} ↗</a>
+    </p>
+  </header>
+
+  <p class="pp-desc">{p.description}</p>
+
+  {p.tags.length > 0 && <ul class="pp-tags">{p.tags.map((t) => <li>{t}</li>)}</ul>}
+
+  {p.images.length > 0 && (
+    <div class="pp-shots">
+      {p.images.map((img) => <img src={assetUrl(img)} alt={img.alt} loading="lazy" />)}
+    </div>
+  )}
+
+  {p.readmeHtml && <div class="pp-readme prose" set:html={p.readmeHtml} />}
+
+  {p.resources.map((r) => <Resource r={r} />)}
+
+  <footer class="pp-links">
+    <a href={p.repo.url} target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
+  </footer>
+</article>

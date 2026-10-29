@@ -1,95 +1,76 @@
 ---
-interface NavLink {
-  label: string;
-  href: string;
-}
+import Carousel from './carousel.astro';
 
 interface Props {
   name: string;
   tagline: string;
-  links?: NavLink[];
 }
-
-const { name, tagline, links = [] } = Astro.props;
+const { name, tagline } = Astro.props;
 ---
 
 <section class="hero">
-  <nav data-fade>
-    {links.map((link) => <a href={link.href}>{link.label}</a>)}
-  </nav>
+  <h1 class="sr-only">{name}: {tagline}</h1>
 
-  <h1>
-    <span class="mask"><span class="inner">{name}</span></span>
-    <span class="mask"><span class="inner dim">{tagline}</span></span>
-  </h1>
+  <Carousel />
 
-  <p class="echo" data-fade>
-    <span class="path">~/portfolio/about</span>
-    <span class="sigil">%</span><span class="cursor blink"></span>
-  </p>
+  <a class="cue" href="#work" data-fade>
+    <span>See my work</span>
+    <span class="cue-arrow" aria-hidden="true">↓</span>
+  </a>
+</section>
+
+<section class="about" id="about" data-fade>
+  <span class="path">~/portfolio/about</span>
+  <span class="sigil">%</span><span class="cursor blink"></span>
+
   <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lacus eu
-    ligula lobortis varius. Fusce euismod ut arcu quis luctus. Sed laoreet
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lacus
+    eu ligula lobortis varius. Fusce euismod ut arcu quis luctus. Sed laoreet
     ultrices urna ac elementum. Ut consectetur hendrerit ullamcorper. Quisque
-    eleifend sit amet tortor in lobortis. Suspendisse velit felis, fringilla vel
-    felis in, pulvinar placerat nisl. In lectus nunc, sagittis id lectus vitae,
-    mollis eleifend justo. Maecenas dignissim, est sed rhoncus malesuada, orci
-    augue dictum nulla, vehicula vehicula magna nisl eget nulla. Curabitur non
-    sem tincidunt dui scelerisque pharetra. In hac habitasse platea dictumst.
-    Morbi sit amet eros mi.
+    eleifend sit amet tortor in lobortis. Suspendisse velit felis, fringilla
+    vel felis in, pulvinar placerat nisl. In lectus nunc, sagittis id lectus
+    vitae, mollis eleifend justo. Maecenas dignissim, est sed rhoncus
+    malesuada, orci augue dictum nulla, vehicula vehicula magna nisl eget
+    nulla. Curabitur non sem tincidunt dui scelerisque pharetra. In hac
+    habitasse platea dictumst. Morbi sit amet eros mi.
   </p>
 </section>
 
 <style>
+  /* the hero is exactly one screen: full-width carousel on top, the cue underneath */
   .hero {
-    min-height: 100svh;
-    padding: clamp(1.25rem, 4vw, 2.5rem);
+    height: calc(100svh - var(--topbar-h));
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
   }
-  nav {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.75rem;
-    font-size: 0.95rem;
-    color: var(--dim);
-  }
-  nav a:hover,
-  nav a:focus-visible {
-    color: var(--fg);
-  }
-
-  h1 {
-    align-self: center;
-    margin: 0;
-    max-width: 14ch;
-    font-weight: 500;
-    font-size: clamp(2.75rem, 9vw, 7.5rem);
-    line-height: 1;
-    letter-spacing: -0.035em;
-  }
-  .mask {
-    display: block;
-    overflow: hidden;
-    padding-bottom: 0.08em;
-  }
-  .inner {
-    display: block;
-    transform: translateY(110%);
-  }
-  .dim {
-    color: var(--dim);
-  }
-
-  .echo {
-    margin: 0;
+  .about {
+    max-width: 80ch;
+    padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.5rem);
     font: 400 0.9rem var(--mono);
   }
+  .about p { margin: 0.75rem 0 0; font-family: var(--sans, inherit); line-height: 1.6; }
   .path {
     color: var(--dim);
   }
   .sigil {
     color: var(--accent);
+  }
+
+  .cue {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem clamp(1.25rem, 4vw, 2.5rem);
+    color: var(--fg);
+    font: 400 0.9rem var(--mono);
+    text-decoration: none;
+  }
+  .cue:hover, .cue:focus-visible { color: var(--accent); }
+  .cue-arrow { display: inline-block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cue-arrow { animation: cue-bob 1.6s ease-in-out infinite; }
+    @keyframes cue-bob { 50% { transform: translateY(5px); } }
   }
 
   [data-fade] {
@@ -100,17 +81,23 @@ const { name, tagline, links = [] } = Astro.props;
 
 <script>
   import gsap from "gsap";
+  import { lenis } from "../setup/lenis";
 
   const play = () =>
     gsap
       .timeline({ defaults: { ease: "power3.out" } })
-      .to(".hero .inner", { y: 0, duration: 1.1, stagger: 0.12 })
-      .to(
-        ".hero [data-fade]",
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 },
-        "-=0.7",
-      );
+      .to("[data-fade]", { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, 0.2);
 
   if (document.documentElement.classList.contains("no-splash")) play();
   else window.addEventListener("splash:reveal", play, { once: true });
+
+  // "See my work": smooth scroll to the workspace (the top bar is fixed, so offset by its height)
+  document.querySelector<HTMLAnchorElement>(".hero .cue")?.addEventListener("click", (e) => {
+    const work = document.getElementById("work");
+    if (!work) return;
+    e.preventDefault();
+    const bar = document.querySelector(".topbar")?.getBoundingClientRect().height ?? 0;
+    // absolute position: Lenis' element lookup ignores the body's top-bar padding
+    lenis.scrollTo(work.getBoundingClientRect().top + window.scrollY - bar, { duration: 1.4 });
+  });
 </script>

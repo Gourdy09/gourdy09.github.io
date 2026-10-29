@@ -1,0 +1,70 @@
+---
+/**
+ * The interactive workspace: persistent terminal, project windows, taskbar.
+ * Panels are rendered at build time into <template>s; the client script only opens them.
+ */
+import '../styles/portfolio.css';
+import ProjectPanel from './projectPanel.astro';
+import { loadProjects } from '../lib/projects';
+import { toSummary } from '../lib/projectMetadata';
+import { site } from '../config/site';
+
+const projects = loadProjects();
+const catalog = JSON.stringify(projects.map(toSummary)).replace(/</g, '\\u003c');
+---
+
+<div class="desk" id="desk" data-user={site.user} data-host={site.host}>
+  {projects.length > 0 && (
+    <nav class="icons" aria-label="Projects">
+      {projects.map((p) => (
+        <button class="icon" type="button" data-open={p.slug}>
+          <span class="icon-name">{p.slug}</span>
+          {p.category && <span class="icon-cat">{p.category}</span>}
+        </button>
+      ))}
+    </nav>
+  )}
+  <div class="stage" id="stage">
+    <section class="win term-win" data-win="terminal" aria-label="Terminal">
+      <header class="win-bar">
+        <span class="win-title">{site.user}@{site.host}: ~/work</span>
+        <span class="win-ctl">
+          <button class="win-btn max" type="button" aria-label="Maximize terminal" data-act="max">▢</button>
+        </span>
+      </header>
+      <div class="win-body term" id="term-body" data-lenis-prevent>
+        <div class="term-out" id="term-out" role="log" aria-live="polite"></div>
+        <label class="term-line">
+          <span class="ps1">{site.user}@{site.host}:~$</span>
+          <input
+            id="term-in"
+            class="term-in"
+            type="text"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="Terminal command input"
+          />
+        </label>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="taskbar" id="taskbar" role="toolbar" aria-label="Open windows"></div>
+</div>
+
+<noscript>
+  <ul class="plain-projects">
+    {projects.map((p) => (
+      <li><a href={p.repo.url}>{p.title}</a>: {p.description}</li>
+    ))}
+  </ul>
+</noscript>
+
+{projects.map((p) => <template id={`tpl-${p.slug}`}><ProjectPanel project={p} /></template>)}
+<script is:inline type="application/json" id="portfolio-catalog" set:html={catalog}></script>
+
+<script>
+  import "../workspace/index";
+</script>

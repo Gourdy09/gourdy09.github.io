@@ -2,6 +2,7 @@
 import Layout from '../layouts/layout.astro';
 import Splash from '../components/splash.astro';
 import Hero from '../components/hero.astro';
+import Workspace from '../components/workspace.astro';
 
 const name = 'Om Patel';
 
@@ -18,15 +19,8 @@ const links = [
   <main>
     <Hero {name} tagline="designs and builds for the web." {links} />
 
-    <section id="work">
-      <!-- your projects go here -->
+    <section id="work" class="work">
+      <Workspace />
     </section>
   </main>
 </Layout>
-
-<style>
-  #work {
-    min-height: 100svh;
-    padding: 2.5rem;
-  }
-</style>

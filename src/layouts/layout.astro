@@ -1,8 +1,7 @@
 ---
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/instrument-sans";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource-variable/instrument-sans";
+import "../styles/theme.css";
 import Topbar from "../components/topbar.astro";
 
 interface Props {
@@ -61,13 +60,7 @@ const { title = "Om Patel", description = "Portfolio" } = Astro.props;
 <style is:global>
   :root {
     --topbar-h: 2.5rem;
-    /* coal / cream / red */
-    --bg: #141211;
-    --term: #1b1816;
-    --fg: #efe6d4;
-    --dim: #8c8478;
-    --accent: #e0402f;
-    --line: rgba(239, 230, 212, 0.12);
+    /* colors live in src/styles/theme.css */
 
     --mono: "JetBrains Mono Variable", ui-monospace, monospace;
     --sans: "Instrument Sans Variable", system-ui, sans-serif;
@@ -115,8 +108,9 @@ const { title = "Om Patel", description = "Portfolio" } = Astro.props;
     }
   }
 
-  .no-splash .splash {
-    display: none;
+  /* html.* + !important so it beats the splash's own scoped display:flex */
+  html.no-splash .splash {
+    display: none !important;
   }
 </style>
 

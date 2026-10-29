@@ -1,0 +1,92 @@
+---
+/**
+ * Generic resource renderer: one block per configured resource, chosen by `type`.
+ * Add a new type by adding a branch here and a case in lib/projectRegistry.ts.
+ */
+import type { Resource } from '../lib/projectMetadata';
+import { assetUrl } from '../lib/projects';
+
+interface Props {
+  r: Resource;
+}
+const { r } = Astro.props;
+
+const opened =
+  r.type === 'webpage' || r.type === 'codespace' || r.type === 'repo' || r.type === 'link'
+    ? r.url
+    : r.type === 'pdf' || r.type === 'notebook' || r.type === 'video'
+      ? r.openUrl
+      : '';
+const openLabel =
+  r.type === 'codespace' ? 'open ↗' : r.type === 'repo' || r.type === 'link' ? 'view ↗' : 'open ↗';
+const host = (u: string) => {
+  try { return new URL(u).hostname; } catch { return u; }
+};
+---
+
+<section class="res" data-type={r.type}>
+  <header class="res-head">
+    <span class="res-title">{r.title}</span>
+    <span class="res-kind">{r.type}</span>
+    {opened && <a class="res-open" href={opened} target="_blank" rel="noopener noreferrer">{openLabel}</a>}
+  </header>
+
+  {r.type === 'webpage' && r.display === 'embed' && !r.embedBlocked && (
+    <div class="frame">
+      <iframe
+        data-src={r.url}
+        title={r.title}
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        referrerpolicy="no-referrer"
+      ></iframe>
+    </div>
+  )}
+  {r.type === 'webpage' && r.display === 'embed' && r.embedBlocked && (
+    <p class="res-note">This site can’t be shown inside the portfolio, so it opens in a new tab ({host(r.url)}).</p>
+  )}
+  {r.type === 'webpage' && r.display !== 'embed' && <p class="res-note">{host(r.url)}</p>}
+
+  {r.type === 'pdf' && r.display === 'embed' && r.asset && (
+    <div class="frame frame-pdf">
+      <iframe data-src={assetUrl(r.asset)} title={r.title}></iframe>
+    </div>
+    <p class="res-note">If the PDF doesn’t display in your browser, use “open”.</p>
+  )}
+
+  {r.type === 'notebook' && r.html && r.display !== 'link' && (
+    <div class="nb" tabindex="0" data-lenis-prevent set:html={r.html} />
+  )}
+  {r.type === 'notebook' && (
+    <p class="res-note">
+      {r.html ? 'Saved outputs only; nothing is executed here. ' : ''}
+      {r.colabUrl && <a href={r.colabUrl} target="_blank" rel="noopener noreferrer">Run it in Google Colab ↗</a>}
+    </p>
+  )}
+
+  {r.type === 'codespace' && (
+    <p class="res-note">Opens GitHub Codespaces in a new tab. It requires a GitHub sign-in and may use your Codespaces quota or incur charges under your GitHub plan.</p>
+  )}
+
+  {r.type === 'video' && r.display === 'embed' && r.asset && (
+    <div class="vid">
+      <video
+        data-src={assetUrl(r.asset)}
+        data-autoplay={r.autoplay ? '1' : '0'}
+        poster={r.poster ? assetUrl(r.poster) : undefined}
+        aria-label={r.title}
+        preload="none"
+        muted
+        loop={r.loop}
+        playsinline={r.playsInline}
+        controls={r.controls}
+      ></video>
+      <button class="vid-toggle" type="button" aria-label="Pause video">❚❚</button>
+      <div class="vid-fallback" hidden>
+        {r.poster && <img src={assetUrl(r.poster)} alt="" loading="lazy" />}
+        <p class="res-note">This video couldn’t be played. <a href={r.openUrl} target="_blank" rel="noopener noreferrer">Open the video ↗</a></p>
+      </div>
+    </div>
+  )}
+  {r.type === 'video' && r.display !== 'embed' && <p class="res-note">Opens in a new tab.</p>}
+  {r.type === 'video' && r.display === 'embed' && !r.asset && <p class="res-note">Opens in a new tab.</p>}
+</section>

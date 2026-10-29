@@ -1,0 +1,21 @@
+/*
+ * THEME: the whole site's palette lives here.
+ * Change these six values and everything (hero, splash, terminal, windows) follows.
+ * Everything below the "derived" line is computed from them.
+ */
+:root {
+  /* ---- palette ---- */
+  --bg: #141211; /* page background */
+  --term: #1b1816; /* terminal / top bar background */
+  --fg: #efe6d4; /* primary text */
+  --dim: #8c8478; /* secondary text */
+  --accent: #e0402f; /* prompts, focus rings, highlights */
+  --ok: #8fb573; /* [ OK ] status markers */
+
+  /* ---- derived (usually leave alone) ---- */
+  --line: color-mix(in srgb, var(--fg) 12%, transparent);
+  --line-strong: color-mix(in srgb, var(--fg) 24%, transparent);
+  --surface: color-mix(in srgb, var(--fg) 4%, var(--term)); /* window background */
+  --surface-2: color-mix(in srgb, var(--fg) 8%, var(--term)); /* title bars, chips */
+  --shadow: rgba(0, 0, 0, 0.45);
+}
