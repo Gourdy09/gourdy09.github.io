@@ -9,7 +9,7 @@
   --term: #1b1816; /* terminal / top bar background */
   --fg: #efe6d4; /* primary text */
   --dim: #8c8478; /* secondary text */
-  --accent: #e0402f; /* prompts, focus rings, highlights */
+  --accent: #e70000; /* prompts, focus rings, highlights */
   --ok: #8fb573; /* [ OK ] status markers */
 
   /* ---- derived (usually leave alone) ---- */
