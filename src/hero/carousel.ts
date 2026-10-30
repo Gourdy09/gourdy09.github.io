@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { lenis } from '../setup/lenis';
-import type { SlideConfig } from '../config/carousel';
+import type { SlideConfig, EffectSettings, FitMode } from '../config/carousel';
 import { VERTEX, fragmentFor, type EffectKey } from './effects';
 
 /**
@@ -14,7 +14,12 @@ export interface Options {
   pauseOnHover: boolean;
   /** fire each slide's click effect by itself shortly after the slide arrives */
   autoEffects: boolean;
+  /** how far (as a ratio) an image's shape may differ from the slide's before 'auto' fit shows it whole */
+  autoFitTolerance: number;
 }
+
+/** A slide as sent from the server: config plus its resolved effect settings and fit. */
+export type SlideData = SlideConfig & { settings: EffectSettings; fit: FitMode; focus: [number, number] };
 
 interface Prog {
   program: WebGLProgram;
@@ -22,8 +27,9 @@ interface Prog {
 }
 
 interface Slide {
-  cfg: SlideConfig;
+  cfg: SlideData;
   tex: WebGLTexture | null;
+  texBlur: WebGLTexture | null;
   img: [number, number];
   mouse: [number, number];
   vel: [number, number];
@@ -39,11 +45,16 @@ interface Slide {
 const UNIFORMS = [
   'uRect', 'uCanvas', 'uTex', 'uImg', 'uSize', 'uTime', 'uHover', 'uPress', 'uToggle', 'uDim', 'uRadius',
   'uShift', 'uZoom', 'uMove', 'uMouse', 'uVel', 'uDrag', 'uClick', 'uAccent', 'uBg',
+  'uTexBlur', 'uFit', 'uBlurBg', 'uFocus', 'uFxStrength', 'uFxSize', 'uFxSoft', 'uFxClick', 'uFxIdle',
 ];
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
+const smoothstep = (a: number, b: number, x: number) => {
+  const t = clamp((x - a) / (b - a), 0, 1);
+  return t * t * (3 - 2 * t);
+};
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Resolve any CSS color (hex, rgb(), named…) to 0..1 rgb. */
@@ -56,6 +67,37 @@ function cssColor(value: string, fallback: [number, number, number]): [number, n
   if (!m) return fallback;
   const n = parseInt(m[1], 16);
   return [(n >> 16) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+/**
+ * A tiny copy of the image (halved repeatedly so the result is a proper average, not aliased).
+ * Stretched back up by the GPU it becomes the soft backdrop behind a letterboxed image.
+ */
+function tinyCopy(img: HTMLImageElement, maxDim: number): HTMLCanvasElement {
+  let w = img.naturalWidth;
+  let h = img.naturalHeight;
+  const k = maxDim / Math.max(w, h);
+  const tw = Math.max(2, Math.round(w * k));
+  const th = Math.max(2, Math.round(h * k));
+  let src: CanvasImageSource = img;
+  while (w > tw * 2) {
+    w = Math.max(tw, Math.ceil(w / 2));
+    h = Math.max(th, Math.ceil(h / 2));
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    const g = c.getContext('2d')!;
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(src, 0, 0, w, h);
+    src = c;
+  }
+  const out = document.createElement('canvas');
+  out.width = tw;
+  out.height = th;
+  const g = out.getContext('2d')!;
+  g.imageSmoothingQuality = 'high';
+  g.drawImage(src, 0, 0, tw, th);
+  return out;
 }
 
 export class Carousel {
@@ -101,14 +143,14 @@ export class Carousel {
 
   private ui: Record<string, HTMLElement | null> = {};
 
-  constructor(root: HTMLElement, cfg: SlideConfig[], opts: Options) {
+  constructor(root: HTMLElement, cfg: SlideData[], opts: Options) {
     this.root = root;
     this.opts = opts;
     this.stage = root.querySelector<HTMLElement>('.cr-stage')!;
     this.canvas = root.querySelector<HTMLCanvasElement>('.cr-canvas')!;
     this.n = cfg.length;
     this.slides = cfg.map((c) => ({
-      cfg: c, tex: null, img: [1, 1], mouse: [0.5, 0.5], vel: [0, 0], drag: [0, 0], last: null,
+      cfg: c, tex: null, texBlur: null, img: [1, 1], mouse: [0.5, 0.5], vel: [0, 0], drag: [0, 0], last: null,
       hover: 0, press: 0, toggle: 0, click: [0.5, 0.5], clickAt: -1e9,
     }));
     for (const k of ['prev', 'next', 'count', 'title', 'hint', 'play', 'close', 'status']) {
@@ -155,6 +197,7 @@ export class Carousel {
         if (p) this.programs.set(key, p);
       }
       s.tex = this.makeTexture();
+      s.texBlur = this.makeTexture();
       this.load(s);
     }
   }
@@ -211,6 +254,10 @@ export class Carousel {
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
       s.img = [img.naturalWidth, img.naturalHeight];
+      if (s.texBlur) {
+        gl.bindTexture(gl.TEXTURE_2D, s.texBlur);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tinyCopy(img, 48));
+      }
       this.kick();
     };
     img.onerror = () => console.warn(`[carousel] could not load ${s.cfg.src}`);
@@ -459,6 +506,7 @@ export class Carousel {
     this.fxTimer = window.setTimeout(() => {
       if (this.ptr.down || !this.inView || document.hidden || !this.ready) return;
       const s = this.slides[this.activeIndex()];
+      if (s.cfg.effect === 'none' || s.cfg.settings.click <= 0) return;
       if (performance.now() - s.clickAt < 2500) return; // the visitor just played with it
       this.fire(s, [1 + Math.random() * 3, 4 + Math.random() * 3]);
     }, 700);
@@ -609,7 +657,9 @@ export class Carousel {
       const isActive = i === active && Math.abs(this.dist(i)) < 0.6;
       const loc = isActive && this.ptr.inside ? this.localFor(i) : null;
 
-      const idle: [number, number] = reduced() ? [0.5, 0.5] : [0.5 + 0.34 * Math.sin(now * 0.55 + i), 0.5 + 0.26 * Math.cos(now * 0.4 + i * 1.7)];
+      const idleAmt = reduced() ? 0 : s.cfg.settings.idle; // 0 = holds still when nobody is touching it
+      const wander = Math.min(idleAmt, 1.5);
+      const idle: [number, number] = [0.5 + 0.34 * wander * Math.sin(now * 0.55 + i), 0.5 + 0.26 * wander * Math.cos(now * 0.4 + i * 1.7)];
       const tgt = loc ?? idle;
       const mx = s.mouse[0];
       const my = s.mouse[1];
@@ -625,7 +675,7 @@ export class Carousel {
           s.drag[0] = clamp(s.drag[0] + (loc[0] - s.last[0]), -0.6, 0.6);
           s.drag[1] = clamp(s.drag[1] + (loc[1] - s.last[1]), -0.6, 0.6);
         }
-      } else if (isActive && !reduced()) {
+      } else if (isActive && idleAmt > 0) {
         // no pointer: let the wandering idle point drive the motion so the shader is always visibly alive
         s.vel[0] = lerp(s.vel[0], clamp((s.mouse[0] - mx) * norm * 2.2, -0.08, 0.08), 0.15);
         s.vel[1] = lerp(s.vel[1], clamp((s.mouse[1] - my) * norm * 2.2, -0.08, 0.08), 0.15);
@@ -637,9 +687,20 @@ export class Carousel {
       const decay = this.ptr.down && isActive ? 0.985 : 0.93;
       s.drag[0] *= decay;
       s.drag[1] *= decay;
-      s.hover = lerp(s.hover, loc ? 1 : isActive && !reduced() ? 0.55 : 0, 0.12);
+      s.hover = lerp(s.hover, loc ? 1 : isActive && idleAmt > 0 ? 0.55 * Math.min(idleAmt, 1) : 0, 0.12);
       s.press = lerp(s.press, loc && this.ptr.down ? 1 : 0, 0.15);
     });
+  }
+
+  /** 0 = crop to fill, 1 = show the whole image. 'auto' eases between them as the slide's shape drifts from the image's. */
+  private fitFor(s: Slide, slideAspect: number) {
+    const mode = s.cfg.fit;
+    if (mode === 'cover') return 0;
+    if (mode === 'contain' || mode === 'blur') return 1;
+    const ia = s.img[0] / s.img[1];
+    const mismatch = Math.max(slideAspect / ia, ia / slideAspect);
+    const tol = this.opts.autoFitTolerance;
+    return smoothstep(tol, tol + 0.3, mismatch);
   }
 
   private draw() {
@@ -661,6 +722,9 @@ export class Carousel {
       if (!p) continue;
       const u = p.loc;
       gl.useProgram(p.program);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, s.texBlur);
+      gl.uniform1i(u.uTexBlur, 1);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, s.tex);
       gl.uniform1i(u.uTex, 0);
@@ -681,6 +745,15 @@ export class Carousel {
       gl.uniform2f(u.uVel, s.vel[0], s.vel[1]);
       gl.uniform2f(u.uDrag, s.drag[0], s.drag[1]);
       gl.uniform3f(u.uClick, s.click[0], s.click[1], Math.min(100, (performance.now() - s.clickAt) / 1000));
+      const st = s.cfg.settings;
+      gl.uniform1f(u.uFit, this.fitFor(s, r.w / r.h));
+      gl.uniform1f(u.uBlurBg, s.cfg.fit === 'contain' ? 0 : 1);
+      gl.uniform2f(u.uFocus, s.cfg.focus[0], 1 - s.cfg.focus[1]); // config y runs from the top, the texture's from the bottom
+      gl.uniform1f(u.uFxStrength, st.strength);
+      gl.uniform1f(u.uFxSize, st.size);
+      gl.uniform1f(u.uFxSoft, st.softness);
+      gl.uniform1f(u.uFxClick, st.click);
+      gl.uniform1f(u.uFxIdle, st.idle);
       gl.uniform3f(u.uAccent, ...this.colors.accent);
       gl.uniform3f(u.uBg, ...this.colors.bg);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
