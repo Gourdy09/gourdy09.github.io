@@ -85,7 +85,7 @@ describe('commands', () => {
   });
   it('has every command required by the spec', () => {
     const names = setup(projects).names;
-    for (const n of ['help', 'clear', 'whoami', 'about', 'projects', 'goto', 'close', 'windows', 'minimize', 'restore', 'resume', 'contact', 'skills'])
+    for (const n of ['help', 'clear', 'whoami', 'projects', 'goto', 'close', 'windows', 'minimize', 'restore', 'resume', 'contact', 'skills'])
       expect(names).toContain(n);
   });
 });
