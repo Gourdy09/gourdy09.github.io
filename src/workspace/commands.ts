@@ -123,10 +123,6 @@ export function createRegistry(deps: Deps) {
     { name: 'clear', usage: 'clear', summary: 'Clear terminal output', run: () => { deps.actions.clear(); return []; } },
     { name: 'whoami', usage: 'whoami', summary: 'Show developer information', run: () => deps.whoami },
     {
-      name: 'about', usage: 'about', summary: 'Jump to the About Me section',
-      run: () => (deps.actions.scrollToAbout() ? [ok('Scrolling to About')] : [fail('About section not found on this page')]),
-    },
-    {
       name: 'skills', usage: 'skills', summary: 'List skills and tools',
       run: () => deps.skills(),
     },

@@ -547,7 +547,7 @@ export class Carousel {
     const s = this.slides[i].cfg;
     const pad = (x: number) => String(x).padStart(2, '0');
     if (this.ui.count) this.ui.count.textContent = `${pad(i + 1)} / ${pad(this.n)}`;
-    if (this.ui.title) this.ui.title.textContent = s.title;
+    if (this.ui.title) this.ui.title.textContent = `"${s.title ?? s.src.split('/').pop() ?? ''}"`;
     if (this.ui.hint) this.ui.hint.textContent = s.hint ?? '';
     this.canvas.setAttribute('aria-label', s.alt);
     if (this.ui.status) {

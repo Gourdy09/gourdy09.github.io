@@ -85,6 +85,32 @@ const { title = "Om Patel", description = "Portfolio" } = Astro.props;
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Scrollbars: the page's is hidden (it still scrolls), inner ones (terminal, windows) are slim */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  @supports not (scrollbar-width: thin) {
+    *::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    *::-webkit-scrollbar-thumb {
+      background: var(--line-strong);
+      border-radius: 3px;
+    }
+    *::-webkit-scrollbar-track,
+    *::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+  }
+
   a {
     color: inherit;
     text-decoration: none;

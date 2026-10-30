@@ -1,0 +1,347 @@
+---
+/**
+ * Decorative neural network for the about section.
+ *  - the architecture is random on every load and again whenever "randomize" is pressed:
+ *    input size, number of hidden layers, each hidden layer's size, output size (see RANGES in the script)
+ *  - cursor: nearby nodes drift toward it, edges stretch with them, nodes brighten, far nodes stay dim
+ *  - signals: every few seconds a pulse in the accent color travels input → output along a random path
+ * Colors come from theme.css.
+ */
+---
+
+<div class="nn" id="nn">
+  <canvas class="nn-canvas" aria-hidden="true"></canvas>
+  <button class="nn-btn" type="button" data-nn="random" aria-label="Generate a new random neural network">randomize</button>
+  <span class="nn-arch" data-nn="arch"></span>
+</div>
+
+<style>
+  .nn {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 20rem;
+    font: 400 12px/1 var(--mono);
+  }
+  .nn-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: pan-y; /* vertical swipes still scroll the page */
+  }
+  .nn-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0;
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    color: var(--fg);
+    font: inherit;
+    cursor: pointer;
+  }
+  .nn-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nn-btn:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+  .nn-arch {
+    position: absolute;
+    left: 0;
+    bottom: 0.25rem;
+    color: var(--dim);
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  /** Ranges for the random architecture (inclusive). Tweak these to taste. */
+  const RANGES = {
+    input: [3, 6],
+    hiddenLayers: [1, 4],
+    hiddenSize: [3, 7],
+    output: [1, 4],
+  } as const;
+
+  const SIGNAL_EVERY = [2.2, 4.2]; // seconds between pulses (min, max)
+  const SEGMENT = 0.5; // seconds a pulse takes to cross one connection
+  const TAIL = 1.6; // seconds a travelled connection takes to fade out
+
+  interface Node {
+    bx: number; by: number; // resting position
+    x: number; y: number; // current position
+    glow: number; // 0..1, from the cursor
+    lit: number; // 0..1, from signals
+    ph: number; // idle-drift phase
+  }
+  interface Signal { path: number[]; t0: number }
+
+  const root = document.getElementById('nn');
+  const canvas = root?.querySelector<HTMLCanvasElement>('.nn-canvas');
+  const ctx = canvas?.getContext('2d');
+
+  if (root && canvas && ctx) {
+    const archLabel = root.querySelector<HTMLElement>('[data-nn="arch"]');
+    const cs = getComputedStyle(document.documentElement);
+    const color = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback;
+    const C = { fg: color('--fg', '#efe6d4'), accent: color('--accent', '#e0402f'), bg: color('--bg', '#141211') };
+
+    const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const rand = (r: readonly [number, number] | readonly number[]) => r[0] + Math.floor(Math.random() * (r[1] - r[0] + 1));
+    const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    let arch: number[] = [];
+    let layers: number[][] = []; // node indices per layer
+    let nodes: Node[] = [];
+    let edges: [number, number][] = [];
+    let signals: Signal[] = [];
+    let W = 1;
+    let H = 1;
+    let time = 0;
+    let lastTs = 0;
+    let nextSignal = 0.9;
+    let appear = 0;
+    let raf = 0;
+    let inView = false;
+    const ptr = { x: 0, y: 0, inside: false };
+
+    const randomArch = () => [
+      rand(RANGES.input),
+      ...Array.from({ length: rand(RANGES.hiddenLayers) }, () => rand(RANGES.hiddenSize)),
+      rand(RANGES.output),
+    ];
+
+    function build(next: number[]) {
+      arch = next;
+      nodes = [];
+      layers = arch.map((n) => Array.from({ length: n }, () => {
+        nodes.push({ bx: 0, by: 0, x: 0, y: 0, glow: 0, lit: 0, ph: Math.random() * 6.28 });
+        return nodes.length - 1;
+      }));
+      edges = [];
+      for (let l = 0; l < layers.length - 1; l++) for (const a of layers[l]) for (const b of layers[l + 1]) edges.push([a, b]);
+      signals = [];
+      nextSignal = time + 0.9;
+      appear = 0;
+      if (archLabel) archLabel.textContent = arch.join(' → ');
+      place(true);
+      kick();
+    }
+
+    /** resting positions: layers spread across the width, nodes centered in each column */
+    function place(snap = false) {
+      const padX = 24;
+      const padTop = 44;
+      const padBottom = 30;
+      const innerH = Math.max(1, H - padTop - padBottom);
+      const gap = Math.min(54, innerH / Math.max(...arch));
+      const cy = padTop + innerH / 2;
+      layers.forEach((layer, l) => {
+        const x = layers.length === 1 ? W / 2 : padX + (l * (W - 2 * padX)) / (layers.length - 1);
+        layer.forEach((id, i) => {
+          const n = nodes[id];
+          n.bx = x;
+          n.by = cy + (i - (layer.length - 1) / 2) * gap;
+          if (snap) { n.x = n.bx; n.y = n.by; }
+        });
+      });
+    }
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.max(1, root!.clientWidth);
+      H = Math.max(1, root!.clientHeight);
+      canvas!.width = Math.round(W * dpr);
+      canvas!.height = Math.round(H * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      place(true);
+      kick();
+    }
+
+    function fire() {
+      const path = [layers[0][Math.floor(Math.random() * layers[0].length)]];
+      for (let l = 1; l < layers.length; l++) path.push(layers[l][Math.floor(Math.random() * layers[l].length)]);
+      signals.push({ path, t0: time });
+    }
+
+    // ------------------------------------------------------------------ simulation
+    function update(dt: number) {
+      const still = reduced();
+      const R = Math.min(170, W * 0.45);
+      const kMove = 1 - Math.exp(-dt * 8);
+      const kGlow = 1 - Math.exp(-dt * 6);
+
+      appear = Math.min(1, appear + dt / 0.7);
+
+      for (const n of nodes) {
+        let tx = n.bx;
+        let ty = n.by;
+        let g = 0;
+        if (!still) {
+          tx += Math.sin(time * 0.7 + n.ph) * 3;
+          ty += Math.cos(time * 0.55 + n.ph * 1.3) * 3;
+        }
+        if (ptr.inside && !still) {
+          const dx = ptr.x - n.bx;
+          const dy = ptr.y - n.by;
+          const d = Math.hypot(dx, dy);
+          if (d < R) {
+            const f = 1 - d / R;
+            tx += dx * 0.6 * f; // drift toward the cursor
+            ty += dy * 0.6 * f;
+            g = Math.pow(f, 1.5); // brighten
+          }
+        }
+        n.x = lerp(n.x, tx, kMove);
+        n.y = lerp(n.y, ty, kMove);
+        n.glow = lerp(n.glow, g, kGlow);
+        n.lit = 0;
+      }
+
+      if (!still) {
+        if (time >= nextSignal) {
+          fire();
+          nextSignal = time + SIGNAL_EVERY[0] + Math.random() * (SIGNAL_EVERY[1] - SIGNAL_EVERY[0]);
+        }
+        signals = signals.filter((s) => time - s.t0 < (s.path.length - 1) * SEGMENT + TAIL + 0.2);
+        for (const s of signals) {
+          const age = time - s.t0;
+          s.path.forEach((id, i) => {
+            const since = age - i * SEGMENT; // time since the pulse reached this node
+            if (since >= 0) nodes[id].lit = Math.max(nodes[id].lit, 1 - clamp(since / 1.1, 0, 1));
+          });
+        }
+      }
+    }
+
+    // ------------------------------------------------------------------ drawing
+    function draw() {
+      const c = ctx!;
+      c.clearRect(0, 0, W, H);
+      const a = 1 - Math.pow(1 - appear, 3); // ease-out fade-in after (re)build
+
+      // connections: brighter and slightly thicker near the cursor
+      c.strokeStyle = C.fg;
+      for (const [i, j] of edges) {
+        const p = nodes[i];
+        const q = nodes[j];
+        const g = Math.max(p.glow, q.glow);
+        c.globalAlpha = (0.1 + 0.55 * g) * a;
+        c.lineWidth = 1 + g * 1.3;
+        c.beginPath();
+        c.moveTo(p.x, p.y);
+        c.lineTo(q.x, q.y);
+        c.stroke();
+      }
+
+      // signals: the pulse head plus the trail of connections it has lit
+      c.strokeStyle = C.accent;
+      c.fillStyle = C.accent;
+      c.shadowColor = C.accent;
+      c.shadowBlur = 8;
+      c.lineWidth = 2.2;
+      for (const s of signals) {
+        const age = time - s.t0;
+        for (let i = 0; i < s.path.length - 1; i++) {
+          const start = i * SEGMENT;
+          const p = clamp((age - start) / SEGMENT, 0, 1);
+          if (p <= 0) break;
+          const fade = p < 1 ? 1 : 1 - clamp((age - start - SEGMENT) / TAIL, 0, 1);
+          if (fade <= 0) continue;
+          const u = nodes[s.path[i]];
+          const v = nodes[s.path[i + 1]];
+          const hx = lerp(u.x, v.x, p);
+          const hy = lerp(u.y, v.y, p);
+          c.globalAlpha = fade * a;
+          c.beginPath();
+          c.moveTo(u.x, u.y);
+          c.lineTo(hx, hy);
+          c.stroke();
+          if (p < 1) {
+            c.beginPath();
+            c.arc(hx, hy, 3.4, 0, Math.PI * 2);
+            c.fill();
+          }
+        }
+      }
+      c.shadowBlur = 0;
+
+      // nodes
+      for (const n of nodes) {
+        const r = (4 + n.glow * 3 + n.lit * 2) * (0.4 + 0.6 * a);
+        c.globalAlpha = a;
+        c.fillStyle = C.bg; // hides the edges behind the node
+        c.beginPath();
+        c.arc(n.x, n.y, r, 0, Math.PI * 2);
+        c.fill();
+
+        c.globalAlpha = (0.3 + 0.7 * n.glow) * a; // far nodes stay dim
+        c.strokeStyle = C.fg;
+        c.lineWidth = 1.5;
+        c.stroke();
+        if (n.glow > 0.02) {
+          c.fillStyle = C.fg;
+          c.globalAlpha = n.glow * 0.6 * a;
+          c.fill();
+        }
+        if (n.lit > 0.02) {
+          c.fillStyle = C.accent;
+          c.strokeStyle = C.accent;
+          c.shadowColor = C.accent;
+          c.shadowBlur = 12 * n.lit;
+          c.globalAlpha = n.lit * a;
+          c.fill();
+          c.stroke();
+          c.shadowBlur = 0;
+        }
+      }
+      c.globalAlpha = 1;
+    }
+
+    // ------------------------------------------------------------------ loop
+    const shouldRun = () => inView && !document.hidden && !reduced();
+
+    const frame = (ts: number) => {
+      raf = 0;
+      const dt = Math.min(0.064, lastTs ? (ts - lastTs) / 1000 : 0.0167);
+      lastTs = ts;
+      time += dt;
+      update(dt);
+      draw();
+      if (shouldRun()) raf = requestAnimationFrame(frame);
+      else lastTs = 0;
+    };
+
+    function kick() {
+      if (raf) return;
+      // reduced motion: a still frame is drawn on build/resize, no loop
+      raf = requestAnimationFrame(frame);
+    }
+
+    // ------------------------------------------------------------------ events
+    const setPointer = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect();
+      ptr.x = e.clientX - r.left;
+      ptr.y = e.clientY - r.top;
+      ptr.inside = true;
+    };
+    root.addEventListener('pointermove', setPointer);
+    root.addEventListener('pointerenter', setPointer);
+    root.addEventListener('pointerleave', () => { ptr.inside = false; });
+    root.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') ptr.inside = false; });
+    root.addEventListener('pointercancel', () => { ptr.inside = false; });
+
+    root.querySelector('[data-nn="random"]')?.addEventListener('click', () => build(randomArch()));
+
+    new ResizeObserver(resize).observe(root);
+    new IntersectionObserver((e) => {
+      inView = e[0].isIntersecting;
+      if (inView) kick();
+    }, { threshold: 0.05 }).observe(root);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+
+    build(randomArch());
+    resize();
+  }
+</script>

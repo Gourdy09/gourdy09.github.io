@@ -83,7 +83,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .cr-ui button { pointer-events: auto; }
   .cr-top { position: absolute; top: 0.75rem; left: 0.9rem; right: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
   .cr-spacer { flex: 1; }
-  .cr-count, .cr-title { text-shadow: 0 1px 8px var(--shadow); }
+  .cr-count { text-shadow: 0 1px 8px var(--shadow); }
   .cr-btn {
     padding: 0.4rem 0.65rem;
     border: 1px solid var(--line-strong);
@@ -111,8 +111,22 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .cr-arrow:hover { border-color: var(--accent); color: var(--accent); }
   .cr-arrow.prev { left: 0.9rem; }
   .cr-arrow.next { right: 0.9rem; }
-  .cr-cap { position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0.85rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1rem; }
-  .cr-hint { color: var(--dim); text-shadow: 0 1px 8px var(--shadow); }
+  .cr-cap {
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 0.85rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  .cr-title { color: var(--accent); }
+  .cr-hint { color: color-mix(in srgb, var(--fg) 72%, transparent); }
   .cr-enter, .cr-exit { margin-left: auto; }
   .cr-exit { display: none; }
   .cr[data-max='1'] .cr-exit { display: inline; }

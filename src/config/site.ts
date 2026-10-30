@@ -3,7 +3,7 @@ import type { Line } from '../lib/term.ts';
 /** Site-wide settings */
 export const site = {
   name: 'Om Patel',
-  tagline: 'designs and builds for the web.',
+  tagline: 'doing cool machine learning shit.',
 
   /** shown in the terminal prompt: user@host:~$ */
   user: 'ompatel',
@@ -30,7 +30,10 @@ export const site = {
 export const whoami: Line[] = [
   [{ t: site.name, cls: 'b' }, { t: `  (${site.user})`, cls: 'dim' }],
   site.tagline,
-  [{ t: 'github  ', cls: 'dim' }, { t: `github.com/${site.github.username}`, href: `https://github.com/${site.github.username}` }],
+  [{ t: 'college:  ', cls: 'dim' }, { t: `Carnegie Mellon University`, href: `https://www.cmu.edu/` }],
+  [{ t: '  - degree:  ', cls: 'dim' }, { t: `BS Artificial Intelligence + Robotics (2030)`}],
+  [{ t: '  - clubs:  ', cls: 'dim' }, { t: `Roboclub, CMIMC, ACM@CMU`}],
+  [{ t: 'currently at:  ', cls: 'dim' }, { t: `Lavoro AI`, href: `https://lavoro.bot/` }],
 ];
 
 /** Output of the `contact` command */
